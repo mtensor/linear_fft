@@ -11,7 +11,8 @@ def hand_code_real_fft_network_fun(n,W_init_stddev):
     #must be power of 2
     logn = int(np.log2(n))
     
-    W = [np.zeros([n,n],dtype = complex) for i in range(2*logn)]
+    W = [np.zeros([n,n],dtype = complex) for i in range(logn)]
+    W_rearrange_list = [np.zeros([n,n],dtype = complex) for i in range(logn)]
     
     #code for last laye
     #Make big wrapper thinggy 
@@ -53,14 +54,21 @@ def hand_code_real_fft_network_fun(n,W_init_stddev):
                     W[i*n/cutsize:(i+1)*n/cutsize,i*n/cutsize:(i+1)*n/cutsize])
         return W
     
+    W_rearrange_compiled = np.identity(n,dtype = complex) 
+    
     for i in range(logn):
-        W[i] = rearrange_rec(W[i],i)
+        W_rearrange_list[i] = rearrange_rec(W[i],i)
         W[-1-i] = butterfly_rec(W[-1-i],i)
+        W_rearrange_compiled = np.matmul(W_rearrange_compiled, W_rearrange_list[i])
+
+    W.insert(0, W_rearrange_compiled)
+    
+    assert len(W) == logn + 1
         
         #now i just have to write these functions 
     
-    W2 = [np.zeros([2*n,2*n],dtype = np.float32) for i in range(2*logn)]
-    for i in range(2*logn):
+    W2 = [np.zeros([2*n,2*n],dtype = np.float32) for i in range(logn + 1)]
+    for i in range(logn + 1):
         
         W2[i][0:n,0:n] = W[i].real
         W2[i][n:2*n,n:2*n] = W[i].real

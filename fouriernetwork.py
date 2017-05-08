@@ -19,11 +19,11 @@ from hand_code_real_fft_network import hand_code_real_fft_network_fun
 complex_n = 16
 n = 2*complex_n
 logn = int(np.ceil(np.log2(complex_n)))
-train_time = 6000
+train_time = 20000
 batch_size = n #for covariance prop training
-optimizer_parameter = 0.01
-beta = 0.0000001 #needs to be dynamically adjusted???
-W_init_stddev = 0.001
+optimizer_parameter = 0.0001
+beta = 0.000000001 #needs to be dynamically adjusted???
+W_init_stddev = .2 #normalize this 
 loss_print_period = train_time/100
 
 
