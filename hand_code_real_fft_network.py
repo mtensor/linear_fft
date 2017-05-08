@@ -61,11 +61,13 @@ def hand_code_real_fft_network_fun(n,W_init_stddev):
     
     W2 = [np.zeros([2*n,2*n],dtype = np.float32) for i in range(2*logn)]
     for i in range(2*logn):
+        
         W2[i][0:n,0:n] = W[i].real
         W2[i][n:2*n,n:2*n] = W[i].real
         W2[i][0:n,n:2*n] = -W[i].imag
         W2[i][n:2*n,0:n] = W[i].imag
-
+        A = np.random.normal(scale=W_init_stddev,size=[2*n,2*n])
+        W2[i] = W2[i] + A.astype(np.float32)      
     return W2
 
     

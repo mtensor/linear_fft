@@ -19,11 +19,11 @@ from hand_code_real_fft_network import hand_code_real_fft_network_fun
 complex_n = 16
 n = 2*complex_n
 logn = int(np.ceil(np.log2(complex_n)))
-train_time = 1000
+train_time = 6000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.01
-beta = 0.0000 #needs to be dynamically adjusted???
-W_init_stddev = 0.02
+beta = 0.0000001 #needs to be dynamically adjusted???
+W_init_stddev = 0.001
 loss_print_period = train_time/100
 
 
@@ -56,6 +56,12 @@ def l_0_norm(W):
     zero = tf.constant(0, dtype=tf.float32)
     where = tf.not_equal(W, zero)
     return tf.reduce_sum(tf.cast(where, tf.float32))
+
+def l_1_norm(W):
+    l1 = 0
+    for i in range(len(W)):
+        l1 = l1 + np.sum(abs(W[i]))
+    return l1
     
     
 
@@ -96,7 +102,7 @@ sess.run(init)
 #            input_vect:input_train[i],ft_output:output_train[i]
 #            })
 #    loss_val = sess.run(loss)
-
+print("optimal L1 norm: %s," %(l_1_norm(hand_code_real_fft_network_fun(complex_n,0))*beta))
 for i in range(train_time):
     reg_loss_val,fn_loss_val, _ = sess.run([regularized_loss,fn_loss, train],{input_vec:input_train[i],ft_output:output_train[i]})
     if i%loss_print_period == 0:
