@@ -19,21 +19,23 @@ from hand_code_real_fft_network import hand_code_real_fft_network_fun
 complex_n = 16
 n = 2*complex_n
 logn = int(np.ceil(np.log2(complex_n)))
-train_time = 20000
+train_time = 40000
 batch_size = n #for covariance prop training
-optimizer_parameter = 0.0001
+optimizer_parameter = 0.001
 beta = 0.000000001 #needs to be dynamically adjusted???
 W_init_stddev = .2 #normalize this 
 loss_print_period = train_time/100
 
 
-W_ft_init = hand_code_real_fft_network_fun(complex_n, W_init_stddev)
 
 # network parameters (weights)
-#W = [tf.Variable(tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
-    #for i in range(logn)]
+#W_ft_init = hand_code_real_fft_network_fun(complex_n, W_init_stddev)
+#W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
 
-W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
+W = [tf.Variable(tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
+    for i in range(logn + 1)]
+
+
 
 
 # network layers
