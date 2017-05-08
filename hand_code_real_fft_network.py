@@ -1,0 +1,75 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Sun May  7 19:34:50 2017
+
+@author: Maxwell
+"""
+import numpy as np
+
+def hand_code_real_fft_network_fun(n,W_init_stddev):
+    #must be power of 2
+    logn = int(np.log2(n))
+    
+    W = [np.zeros([n,n],dtype = complex) for i in range(2*logn)]
+    
+    #code for last laye
+    #Make big wrapper thinggy 
+    #fix so input isn't stupid - or don't 
+    def butterfly(W_in):
+        n = W_in.shape[0]
+        W = np.zeros([n,n],dtype = complex)
+        for k in range(n/2):
+            W[k,k] = 1
+            W[k,k+n/2] = np.exp(-2*np.pi*1j*k/n)
+            W[k+n/2,k+n/2] = - np.exp(-2*np.pi*1j*k/n)
+            W[k+n/2,k] = 1
+        return W
+            
+    def rearrange(W_in):
+        #I dont think we need to input an n so help me god
+        n = W_in.shape[0]
+        W = np.zeros([n,n],dtype = complex)
+        for k in range(n/2):
+            W[k,2*k] = 1
+            W[k+n/2,2*k+1] = 1
+        return W
+    
+    def rearrange_rec(W_in,rec_depth):
+        cutsize = 2**rec_depth
+        n = W_in.shape[0]
+        W = np.zeros([n,n],dtype = complex)
+        for i in range(cutsize):
+            W[i*n/cutsize:(i+1)*n/cutsize,i*n/cutsize:(i+1)*n/cutsize] = rearrange(
+                    W[i*n/cutsize:(i+1)*n/cutsize,i*n/cutsize:(i+1)*n/cutsize])
+        return W
+        
+    def butterfly_rec(W_in,rec_depth):
+        cutsize = 2**rec_depth
+        n = W_in.shape[0]
+        W = np.zeros([n,n],dtype = complex)
+        for i in range(cutsize):
+            W[i*n/cutsize:(i+1)*n/cutsize,i*n/cutsize:(i+1)*n/cutsize] = butterfly(
+                    W[i*n/cutsize:(i+1)*n/cutsize,i*n/cutsize:(i+1)*n/cutsize])
+        return W
+    
+    for i in range(logn):
+        W[i] = rearrange_rec(W[i],i)
+        W[-1-i] = butterfly_rec(W[-1-i],i)
+        
+        #now i just have to write these functions 
+    
+    W2 = [np.zeros([2*n,2*n],dtype = np.float32) for i in range(2*logn)]
+    for i in range(2*logn):
+        W2[i][0:n,0:n] = W[i].real
+        W2[i][n:2*n,n:2*n] = W[i].real
+        W2[i][0:n,n:2*n] = -W[i].imag
+        W2[i][n:2*n,0:n] = W[i].imag
+
+    return W2
+
+    
+
+
+    
+     
