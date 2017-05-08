@@ -38,13 +38,13 @@ W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
 
 # network layers
 
-input_vec = tf.placeholder(tf.float32, shape=[None,n])
+input_vec = tf.placeholder(tf.float32, shape=[n,None])
 
 hidden = [input_vec]
-for i in range(logn):
-    hidden.append(tf.matmul(hidden[-1],W[i]))
+for i in range(len(W)):
+    hidden.append(tf.matmul(W[i],hidden[-1]))
 output = hidden[-1]
-ft_output = tf.placeholder(tf.float32, shape=[None,n])
+ft_output = tf.placeholder(tf.float32, shape=[n,None])
 
 #shape function for goodness
 def shape(tensor):
@@ -83,7 +83,8 @@ output_train = []
 for i in range(train_time):
     #input_train.append(np.random.randn(batch_size,n))
     input_train.append(np.identity(n))
-    output_train.append(fourier_trans(input_train[i]))
+    output_train.append(np.transpose(fourier_trans(input_train[i])))
+    #the above line is surely fucked up in a major way
 
 # training loop
 init = tf.global_variables_initializer()
