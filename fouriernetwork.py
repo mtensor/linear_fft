@@ -81,12 +81,9 @@ train = optimizer.minimize(regularized_loss)
 #train = tf.train.GradientDescentOptimizer(0.01).minimize(
 #tf.reduce_sum(tf.square(output - fourier_trans(input_train))))
 
-input_train = []
-output_train = []
-for i in range(train_time):
     #input_train.append(np.random.randn(batch_size,n))
-    input_train.append(np.identity(n))
-    output_train.append(np.transpose(fourier_trans(input_train[i])))
+input_train = np.identity(n)
+output_train = np.transpose(fourier_trans(input_train))
     #the above line is surely fucked up in a major way
 
 
@@ -107,7 +104,7 @@ print("optimal L1 norm: %s," %(l_1_norm(hand_code_real_fft_network_fun(complex_n
 reglossvec = []
 fnlossvec = []
 for i in range(train_time):
-    reg_loss_val,fn_loss_val, _ = sess.run([regularized_loss,fn_loss, train],{input_vec:input_train[i],ft_output:output_train[i]})
+    reg_loss_val,fn_loss_val, _ = sess.run([regularized_loss,fn_loss, train],{input_vec:input_train,ft_output:output_train})
     
     if i%loss_print_period == 0:
         print("step %s, function loss: %s, regularized loss: %s" 
