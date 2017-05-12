@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 complex_n = 16
 n = 2*complex_n
 logn = int(np.ceil(np.log2(complex_n)))
-train_time = 100000
+train_time = 1000000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.001 #it sometimes converges at .001
 beta = 0.01 #needs to be dynamically adjusted???
@@ -63,6 +63,12 @@ def l_1_norm(W):
     for i in range(len(W)):
         l1 = l1 + np.sum(abs(W[i]))
     return l1
+
+def rectify(W,cutoff):
+    W_rect = W
+    for i in range(len(W)):
+        W_rect[i][np.abs(W[i]) < cutoff] = 0
+    return W_rect
     
 
 # loss - do I need regularizer here?
@@ -85,8 +91,6 @@ train = optimizer.minimize(regularized_loss)
 input_train = np.identity(n)
 output_train = np.transpose(fourier_trans(input_train))
     #the above line is surely fucked up in a major way
-
-
 
 
 # training loop
@@ -117,9 +121,8 @@ for i in range(train_time):
     
 Wcurr = sess.run(W)    
 
-plt.plot(reglossvec[100:-1])
+plt.plot(reglossvec)
 plt.xlabel('trial number')
-plt.xaxis(range(100,4000))
 plt.ylabel('regularized loss')
 plt.title('Regularized loss versus trial number')
 plt.show()
