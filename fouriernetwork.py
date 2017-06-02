@@ -19,8 +19,8 @@ import matplotlib.pyplot as plt
 # initial conditions
 complex_n = 16
 n = 2*complex_n
-logn = int(np.ceil(np.log2(complex_n)))
-train_time = 1000000
+logn = 1 #int(np.ceil(np.log2(complex_n)))
+train_time = 100000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.001 #it sometimes converges at .001
 beta = 0.01 #needs to be dynamically adjusted???
@@ -58,6 +58,13 @@ def l_0_norm(W):
     where = tf.not_equal(W, zero)
     return tf.reduce_sum(tf.cast(where, tf.float32))
 
+#jesus i need to do some cleanup here
+def l0norm(W):
+    ones = np.ones(W.shape)
+    norm0 = np.sum(ones[W != 0])
+    return norm0
+
+    
 def l_1_norm(W):
     l1 = 0
     for i in range(len(W)):
