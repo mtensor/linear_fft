@@ -5,22 +5,19 @@ Created on Tue Apr 18 18:55:31 2017
 
 @author: Maxwell
 """
-from IPython import get_ipython
-get_ipython().magic('reset -sf')
-
 
 
 import numpy as np
 import tensorflow as tf
-from fourier_stuff import fourier_trans
-from hand_code_real_fft_network import hand_code_real_fft_network_fun
+from fourier_stuff_odyssey import fourier_trans
+from hand_code_real_fft_network_odyssey import hand_code_real_fft_network_fun
 import matplotlib.pyplot as plt
 
 # initial conditions
 complex_n = 16
 n = 2*complex_n
 logn = 1 #int(np.ceil(np.log2(complex_n)))
-train_time = 100000
+train_time = 10000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.001 #it sometimes converges at .001
 beta = 0.01 #needs to be dynamically adjusted???
