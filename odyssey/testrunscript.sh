@@ -2,7 +2,7 @@
 #
 #BATCH -J single_fouriernetwork
 #SBATCH -o single_fouriernetwork.out
-#SBATCH -e single_fourernetwork.err
+#SBATCH -e single_fouriernetwork.err
 #SBATCH -N 1
 #SBATCH -n 32
 #SBATCH -t 0-40:00
