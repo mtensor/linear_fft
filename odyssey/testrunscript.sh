@@ -6,7 +6,7 @@
 #SBATCH -N 1
 #SBATCH -n 32
 #SBATCH -t 0-40:00
-#SBATCH -p general
+#SBATCH -p serial_requeue
 #SBATCH --mem=24000
 #SBATCH --mail-type=ALL      
 #SBATCH --mail-user=mnye@college.harvard.edu
