@@ -16,7 +16,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # initial conditions
-complex_n = 16
+complex_n = 32
 n = 2*complex_n
 logn = 1 #int(np.ceil(np.log2(complex_n)))
 train_time = 10000000
