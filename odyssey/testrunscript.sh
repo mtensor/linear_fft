@@ -12,4 +12,4 @@
 #SBATCH --mail-user=mnye@college.harvard.edu
 
 module load gcc/4.9.3-fasrc01 tensorflow/0.12.0-fasrc02
-python fouriernetwork_odyssey646464646464.py
+python fouriernetwork_odyssey64.py
