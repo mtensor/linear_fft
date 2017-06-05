@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 complex_n = 16
 n = 2*complex_n
 logn = 1 #int(np.ceil(np.log2(complex_n)))
-train_time = 1000
+train_time = 10000000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.001 #it sometimes converges at .001
 beta = 0.01 #needs to be dynamically adjusted???
