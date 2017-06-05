@@ -11,13 +11,15 @@ import numpy as np
 import tensorflow as tf
 from fourier_stuff_odyssey import fourier_trans
 from hand_code_real_fft_network_odyssey import hand_code_real_fft_network_fun
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # initial conditions
 complex_n = 16
 n = 2*complex_n
 logn = 1 #int(np.ceil(np.log2(complex_n)))
-train_time = 10000
+train_time = 1000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.001 #it sometimes converges at .001
 beta = 0.01 #needs to be dynamically adjusted???
@@ -125,6 +127,7 @@ for i in range(train_time):
     
 Wcurr = sess.run(W)    
 
+"""
 plt.plot(reglossvec)
 plt.xlabel('trial number')
 plt.ylabel('regularized loss')
@@ -141,4 +144,4 @@ plt.show()
 plt.imshow(Wcurr[1])
 plt.title('heatmap of W_1 with beta = %s'%beta)
 plt.colorbar()
-
+"""
