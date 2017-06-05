@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 #BATCH -J single_fouriernetwork
-#SBATCH -o single_fouriernetwork.out
-#SBATCH -e single_fouriernetwork.err
+#SBATCH -o single_fouriernetwork32.out
+#SBATCH -e single_fouriernetwork32.err
 #SBATCH -N 1
 #SBATCH -n 32
 #SBATCH -t 0-40:00
