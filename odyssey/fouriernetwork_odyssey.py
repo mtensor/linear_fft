@@ -6,7 +6,7 @@ Created on Tue Apr 18 18:55:31 2017
 @author: Maxwell
 """
 
-
+from __future__ import division
 import numpy as np
 import tensorflow as tf
 from fourier_stuff_odyssey import fourier_trans
@@ -15,15 +15,17 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+
 # initial conditions
-complex_n = 32
+complex_n = 16
 n = 2*complex_n
-logn = 1 #int(np.ceil(np.log2(complex_n)))
-train_time = 10000000
+logn = int(np.ceil(np.log2(complex_n)))
+train_time = 10000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.001 #it sometimes converges at .001
 beta = 0.01 #needs to be dynamically adjusted???
-W_init_stddev = .21 #normalize this 
+total_error_stddev = 100
+W_init_stddev = total_error_stddev**(1/(logn+1))/n*2 #.21 #normalize this 
 loss_print_period = train_time/100
 
 
@@ -113,7 +115,7 @@ sess.run(init)
 print("optimal L1 norm: %s," %(l_1_norm(hand_code_real_fft_network_fun(complex_n,0))*beta))
 reglossvec = []
 fnlossvec = []
-for i in range(train_time):
+for i in range(train_time): #can also make it until we hit the optimal
     reg_loss_val,fn_loss_val, _ = sess.run([regularized_loss,fn_loss, train],{input_vec:input_train,ft_output:output_train})
     
     if i%loss_print_period == 0:
@@ -125,7 +127,14 @@ for i in range(train_time):
     assert not np.isnan(fn_loss_val)
     assert not np.isnan(reg_loss_val)
     
-Wcurr = sess.run(W)    
+Wcurr = sess.run(W)
+#save Wcurr  
+#save reglossvec
+#save fnlossvec
+
+
+#do cutoff thingy
+print(len(Wcurr))
 
 """
 plt.plot(reglossvec)
