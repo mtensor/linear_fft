@@ -15,13 +15,12 @@ fo = open(param_fn, "w")
 os.makedirs("/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data" % settings.expt)
 os.makedirs("/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/logs" % settings.expt)
 
-#modified up to here
 
 #depths
 
 weightscales = [.1]
 rseed = 2
-noffsets = 20
+noffsets = 4
 rseed_offsets = np.linspace(0,rseed*(noffsets-1),noffsets).astype(int)
 expt = settings.expt
 
@@ -35,7 +34,7 @@ for n in complexsizes:
         for beta in L1_betas:
             for ws in weightscales:
                 for roff in rseed_offsets:
-                    fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %g -beta %d -optimizer %d -epochs 10000000 -savefile /n/home09/mnye/linear_fft/results/fouriernetwork/expt%d/data/res%d.npz\n" % (rseed, roff, ws, n, beta, optimizer, expt, i))
+                    fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 10000000 -savefile /n/home09/mnye/linear_fft/results/fouriernetwork/expt%d/data/res%d.npz\n" % (rseed, roff, ws, n, beta, optimizer, expt, i))
                     i = i+1
                     #what is lr?
                     #epoch thing may need to be cut
