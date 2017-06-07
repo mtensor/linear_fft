@@ -34,7 +34,7 @@ for n in complexsizes:
         for beta in L1_betas:
             for ws in weightscales:
                 for roff in rseed_offsets:
-                    fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 10000000 -savefile /n/home09/mnye/linear_fft/results/fouriernetwork/expt%d/data/res%d.npz\n" % (rseed, roff, ws, n, beta, optimizer, expt, i))
+                    fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 10000000 -runtoconv -savefile /n/home09/mnye/linear_fft/results/fouriernetwork/expt%d/data/res%d.npz\n" % (rseed, roff, ws, n, beta, optimizer, expt, i))
                     i = i+1
                     #what is lr?
                     #epoch thing may need to be cut
