@@ -24,9 +24,9 @@ noffsets = 4
 rseed_offsets = np.linspace(0,rseed*(noffsets-1),noffsets).astype(int)
 expt = settings.expt
 
-complexsizes = [16]
+complexsizes = [16, 32, 64, 128, 256]
 optimizer_params = [0.001]
-L1_betas = [0.01]
+L1_betas = [0.01, 0.05, 0.005]
 
 i = 1
 for n in complexsizes:
