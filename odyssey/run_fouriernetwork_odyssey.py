@@ -1,35 +1,102 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 18 18:55:31 2017
 
-@author: Maxwell
-"""
-
+from __future__ import print_function
 from __future__ import division
 import numpy as np
+
+import argparse
+
+#max's
 import tensorflow as tf
 from fourier_stuff_odyssey import fourier_trans
 from hand_code_real_fft_network_odyssey import hand_code_real_fft_network_fun
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('-paramfile', type=argparse.FileType('r')) #keep
+parser.add_argument('-line', type=int) #keep?
+
+parser.add_argument('-rseed', type=int, default=1) #Keep
+parser.add_argument('-rseed_offset', type=int, default=0) #Keep
+
+#I don't think I need any of these:
+parser.add_argument('-numinputs', type=int, default=15)                                                                                             
+parser.add_argument('-numoutputs', type=int, default=1)
+parser.add_argument('-numhid', type=int, default=50)
+parser.add_argument('-depth', type=int, default=1)
+parser.add_argument('-freeze', action='store_true')
+parser.add_argument('-numteacher', type=int, default=30)
+parser.add_argument('-snr', type=float, default=1.0)
+parser.add_argument('-numsamples', type=int, default=300)
+
+
+parser.add_argument('-epochs',     type=int, default=10000000) #Keep
+parser.add_argument('-batchsize', type=int, default=-1)
+parser.add_argument('-weightscale', type=float, default=0.21) #Keep
+parser.add_argument('-earlystop', action='store_true')
+
+#many of the above won't mean anything to me. Mine are below
+parser.add_argument('-beta', type=float, default=0.01)
+parser.add_argument('-optimizer', type=float, default=0.001)
+parser.add_argument('-complexsize', type=int, default=16)
+parser.add_argument('-runtoconv', action='store_true')
+
+parser.add_argument('-savefile', type=argparse.FileType('w'))
+
+parser.add_argument('-showplot', action='store_true')
+parser.add_argument('-saveplot', action='store_true')
+parser.add_argument('-verbose', action='store_true')
+
+
+settings = parser.parse_args(); 
+
+#I think we are okay above this point
+                            
+# Read in parameters from correct line of file
+if settings.paramfile is not None:
+    for l, line in enumerate(settings.paramfile):
+        if l == settings.line:
+            settings = parser.parse_args(line.split())
+            break
+            
+
+if settings.showplot or settings.saveplot:
+    import matplotlib
+
+    if not settings.showplot:
+        matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+
+#random seed shit - I've depricated the use of rseed being anythign but a single integer
+np.random.seed(settings.rseed_offset)
+
+#put my stuff here
 
 
 # initial conditions
-complex_n = 128
+complex_n = settings.complexsize
 n = 2*complex_n
 logn = int(np.ceil(np.log2(complex_n)))
-train_time = 100000
+train_time = settings.epochs
 batch_size = n #for covariance prop training
-optimizer_parameter = 0.001 #it sometimes converges at .001
-beta =0.# 0.01 #needs to be dynamically adjusted???
-total_error_stddev = 100
-W_init_stddev = .05 #total_error_stddev**(1/(logn+1))/n*2 #.21 #normalize this 
+optimizer_parameter = settings.optimizer #it sometimes converges at .001
+beta =settings.beta# 0.01 #needs to be dynamically adjusted???
 loss_print_period = train_time/100
-traintoconv = True
+traintoconv = settings.runtoconv
 
 
+total_error_stddev = 100
+W_init_stddev = settings.weightscale #total_error_stddev**(1/(logn+1))/n*2 #.21
+
+if complex_n == 16:
+    W_init_stddev = .21
+elif complex_n == 32 or complex_n == 64:
+    W_init_stddev = .1
+elif complex_n == 128: 
+    W_init_stddev = .1
+elif complex_n == 256:
+    W_init_stddev = .05
+                                                       
 
 # network parameters (weights)
 W_ft_init = hand_code_real_fft_network_fun(complex_n, W_init_stddev)
@@ -115,8 +182,10 @@ sess.run(init)
 #            })
 #    loss_val = sess.run(loss)
 print("complex n: %s" %complex_n)
+print("beta: %s" %beta)
 print("initial total weight variance scale: %s" %total_error_stddev)
 print("initial individual weight variance scale: %s" %W_init_stddev)
+
 
 optimal_L1 = l_1_norm(hand_code_real_fft_network_fun(complex_n,0))*beta
 print("optimal L1 norm: %s" %(optimal_L1))
@@ -183,26 +252,29 @@ print("L_0 norm: %s"%l0_norm)
 #need settings stuff, wrap it up
 
 #if savefigure or showfigure:
+Wcurr = sess.run(W)
 if settings.savefile:
     np.savez(settings.savefile, reglossvec=reglossvec, fnlossvec=fnlossvec, W=Wcurr, params=[settings])
 
 
 
+#deal with this later 
+"""   
+if settings.savefile:
+    np.savez(settings.savefile, train=train_err, test=test_err, params=[settings])
+
+if settings.showplot or settings.saveplot:
+    epoch = np.linspace(0, len(history.history['loss']), len(history.history['loss']))
+
+    fig, ax = plt.subplots(1)
+    line1, = ax.plot(epoch, history.history['loss'], linewidth=2,label='Train loss')
+    line2, = ax.plot(epoch, history.history['val_loss'], linewidth=2, label='Test loss')
+    ax.legend(loc='upper center')
+
+    if settings.showplot:
+        plt.show()
+    elif settings.saveplot:
+        fig.savefig('rand_relu_training_dynamics.pdf', bbox_inches='tight')
 """
-plt.plot(reglossvec)
-plt.xlabel('trial number')
-plt.ylabel('regularized loss')
-plt.title('Regularized loss versus trial number')
-plt.show()
-
-plt.plot(fnlossvec)
-plt.xlabel('trial number')
-plt.ylabel('function squared error loss')
-plt.title('function loss versus trial number')
-plt.show()
 
 
-plt.imshow(Wcurr[1])
-plt.title('heatmap of W_1 with beta = %s'%beta)
-plt.colorbar()
-"""
