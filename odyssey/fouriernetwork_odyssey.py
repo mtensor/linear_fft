@@ -17,13 +17,13 @@ import matplotlib.pyplot as plt
 
 
 # initial conditions
-complex_n = 128
+complex_n = 256
 n = 2*complex_n
 logn = int(np.ceil(np.log2(complex_n)))
-train_time = 100000
+train_time = 1000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.001 #it sometimes converges at .001
-beta =0.# 0.01 #needs to be dynamically adjusted???
+beta =0.01# 0.01 #needs to be dynamically adjusted???
 total_error_stddev = 100
 W_init_stddev = .05 #total_error_stddev**(1/(logn+1))/n*2 #.21 #normalize this 
 loss_print_period = train_time/100
@@ -183,8 +183,8 @@ print("L_0 norm: %s"%l0_norm)
 #need settings stuff, wrap it up
 
 #if savefigure or showfigure:
-if settings.savefile:
-    np.savez(settings.savefile, reglossvec=reglossvec, fnlossvec=fnlossvec, W=Wcurr, params=[settings])
+#if settings.savefile:
+#    np.savez(settings.savefile, reglossvec=reglossvec, fnlossvec=fnlossvec, W=Wcurr, params=[settings])
 
 
 
