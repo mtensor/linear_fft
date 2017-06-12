@@ -93,7 +93,7 @@ if complex_n == 16:
 elif complex_n == 32 or complex_n == 64:
     W_init_stddev = .1
 elif complex_n == 128: 
-    W_init_stddev = .1
+    W_init_stddev = .05
 elif complex_n == 256:
     W_init_stddev = .05
                                                        
@@ -237,7 +237,10 @@ print("function error of rectified network: %s" %rect_error)
 l0_norm = l0norm(W_rect)
 print("L_0 norm: %s"%l0_norm)
 
-
+#calculate scaling factor
+nlogn = float(complex_n * logn)
+scaling_factor = l0_norm / nlogn
+print("Scaling factor: %s" %scaling_factor)
 
 #save Wcurr  
 #save reglossvec
