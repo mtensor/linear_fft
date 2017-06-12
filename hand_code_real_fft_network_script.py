@@ -63,7 +63,7 @@ for i in range(logn):
     
     #now i just have to write these functions 
 
-W2 = [np.zeros([2*n,2*n],dtype = complex) for i in range(2*logn)]
+W2 = [np.zeros([2*n,2*n],dtype = np.float32) for i in range(2*logn)]
 for i in range(2*logn):
     W2[i][0:n,0:n] = W[i].real
     W2[i][n:2*n,n:2*n] = W[i].real
