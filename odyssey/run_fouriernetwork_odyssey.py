@@ -80,7 +80,7 @@ logn = int(np.ceil(np.log2(complex_n)))
 train_time = settings.epochs
 batch_size = n #for covariance prop training
 optimizer_parameter = settings.optimizer #it sometimes converges at .001
-beta =settings.beta# 0.01 #needs to be dynamically adjusted???
+beta = settings.beta# 0.01 #needs to be dynamically adjusted???
 loss_print_period = train_time/100
 traintoconv = settings.runtoconv
 
@@ -182,6 +182,7 @@ sess.run(init)
 #            })
 #    loss_val = sess.run(loss)
 print("complex n: %s" %complex_n)
+print("optimizer parameter: %s" %optimizer_parameter)
 print("beta: %s" %beta)
 print("initial total weight variance scale: %s" %total_error_stddev)
 print("initial individual weight variance scale: %s" %W_init_stddev)
@@ -213,34 +214,41 @@ while (i < train_time):
         
     i += 1
 
+if not traintoconv and (reg_loss_val < optimal_L1):
+    convergence_trigger = True
+    
 if not convergence_trigger:
     print("did not train to convergence")
 
+
+cutoff_list = [2., 5., 10., 50., 100.] #need to be floats
+for cutoff_factor in len(cutoff_list):
+    Wcurr = sess.run(W)
     
-Wcurr = sess.run(W)
-
-#find cutoffval, 10 
-cutoff_val = abs(np.imag(np.exp(-2*np.pi*1j/complex_n))/100.)
-W_rect = rectify(Wcurr,cutoff_val)
-
-#calculate error
-ft_in = input_train
-ft = [ft_in]
-for l in range(len(W_rect)):
-    ft.append(np.matmul(W_rect[l],ft[-1]))
-ft = ft[-1]
-diff = ft - output_train
-rect_error = sum(sum(np.square(diff)))
-
-print("function error of rectified network: %s" %rect_error)
-#calculate L0 norm 
-l0_norm = l0norm(W_rect)
-print("L_0 norm: %s"%l0_norm)
-
-#calculate scaling factor
-nlogn = float(complex_n * logn)
-scaling_factor = l0_norm / nlogn
-print("Scaling factor: %s" %scaling_factor)
+    #find cutoffval
+    cutoff_val = abs(np.imag(np.exp(-2*np.pi*1j/complex_n))/cutoff_factor)
+    W_rect = rectify(Wcurr,cutoff_val)
+    print("Cutoff factor: %s" %cutoff_factor)
+    
+    #calculate error
+    ft_in = input_train
+    ft = [ft_in]
+    for l in range(len(W_rect)):
+        ft.append(np.matmul(W_rect[l],ft[-1]))
+    ft = ft[-1]
+    diff = ft - output_train
+    rect_error = sum(sum(np.square(diff)))
+    
+    print("\t Function error of rectified network: %s" %rect_error)
+    #calculate L0 norm 
+    l0_norm = l0norm(W_rect)
+    print("\t L_0 norm: %s"%l0_norm)
+    
+    #calculate scaling factor
+    nlogn = float(complex_n * logn)
+    scaling_factor = l0_norm / nlogn
+    print("\t Complexity scaling factor: %s (ideal value is 8)" %scaling_factor)
+    #expected value is 8
 
 #save Wcurr  
 #save reglossvec
