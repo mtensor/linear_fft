@@ -29,7 +29,7 @@ parser.add_argument('-snr', type=float, default=1.0)
 parser.add_argument('-numsamples', type=int, default=300)
 
 
-parser.add_argument('-epochs',     type=int, default=10000000) #Keep
+parser.add_argument('-epochs',     type=int, default=1000) #Keep
 parser.add_argument('-batchsize', type=int, default=-1)
 parser.add_argument('-weightscale', type=float, default=0.21) #Keep
 parser.add_argument('-earlystop', action='store_true')
@@ -221,8 +221,9 @@ if not convergence_trigger:
     print("did not train to convergence")
 
 
-cutoff_list = [2., 5., 10., 50., 100.] #need to be floats
-for cutoff_factor in len(cutoff_list):
+cutoff_list = [1., 2., 5., 10., 20., 50., 100.] #need to be floats
+for index in range(len(cutoff_list)):
+    cutoff_factor = cutoff_list[index]
     Wcurr = sess.run(W)
     
     #find cutoffval
