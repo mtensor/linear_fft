@@ -31,16 +31,17 @@ parser.add_argument('-snr', type=float, default=1.0)
 parser.add_argument('-numsamples', type=int, default=300)
 
 
-parser.add_argument('-epochs',     type=int, default=1000) #Keep
+parser.add_argument('-epochs',     type=int, default=10000) #Keep
 parser.add_argument('-batchsize', type=int, default=-1)
 parser.add_argument('-weightscale', type=float, default=0.21) #Keep
 parser.add_argument('-earlystop', action='store_true')
 
 #many of the above won't mean anything to me. Mine are below
-parser.add_argument('-beta', type=float, default=0.01)
+parser.add_argument('-beta', type=float, default=0.0001)
 parser.add_argument('-optimizer', type=float, default=0.001)
-parser.add_argument('-complexsize', type=int, default=16)
+parser.add_argument('-complexsize', type=int, default=64)
 parser.add_argument('-runtoconv', action='store_true')
+parser.add_argument('-layerwise_l1', action='store_true')
 
 parser.add_argument('-savefile', type=argparse.FileType('w'))
 
@@ -85,7 +86,9 @@ optimizer_parameter = settings.optimizer #it sometimes converges at .001
 beta = settings.beta# 0.01 #needs to be dynamically adjusted???
 loss_print_period = train_time/100
 traintoconv = settings.runtoconv
-
+layerwise_l1 = settings.layerwise_l1
+if layerwise_l1:
+    print("layerwise L1 is on")
 
 total_error_stddev = 100
 W_init_stddev = settings.weightscale #total_error_stddev**(1/(logn+1))/n*2 #.21
@@ -155,13 +158,24 @@ def rectify(W,cutoff):
 # loss - do I need regularizer here?
 # regularizer = l_0_norm(W) #should this be l1 so it is convex??
 # loss = tf.reduce_sum(tf.square(output - ft_output) + beta *regularizer)
-l1_regularizer = tf.contrib.layers.l1_regularizer(scale=beta, scope=None)
-regularization_penalty = tf.contrib.layers.apply_regularization(
-        l1_regularizer, W)
-fn_loss = tf.reduce_sum(tf.square(output - ft_output))
-regularized_loss = fn_loss + regularization_penalty
+if layerwise_l1:
+    l1_regularizer = tf.contrib.layers.l1_regularizer(scale=1.0, scope=None)
+    layer_penalty = []
+    for i in range(len(W)):
+        layer_penalty.append(tf.square(tf.contrib.layers.apply_regularization(
+                l1_regularizer, weights_list=[W[i]])))
+    regularization_penalty = tf.add_n(layer_penalty)
+    fn_loss = tf.reduce_sum(tf.square(output - ft_output))
+    regularized_loss = fn_loss + beta * regularization_penalty
+else: #regular l1 norm
+    l1_regularizer = tf.contrib.layers.l1_regularizer(scale=beta, scope=None)
+    regularization_penalty = tf.contrib.layers.apply_regularization(
+            l1_regularizer, W)
+    fn_loss = tf.reduce_sum(tf.square(output - ft_output))
+    regularized_loss = fn_loss + regularization_penalty
+
 # optimizer 
-optimizer = tf.train.AdamOptimizer(optimizer_parameter)
+optimizer = tf.train.GradientDescentOptimizer(optimizer_parameter)
 train = optimizer.minimize(regularized_loss)
 
 #All written out:
@@ -190,8 +204,12 @@ print("beta: %s" %beta)
 print("initial total weight variance scale: %s" %total_error_stddev)
 print("initial individual weight variance scale: %s" %W_init_stddev)
 
-
-optimal_L1 = l_1_norm(hand_code_real_fft_network_fun(complex_n,0))*beta
+if layerwise_l1:
+    W_opt = hand_code_real_fft_network_fun(complex_n,0)
+    layerwise_optimal_norm = [l_1_norm(W_opt[i]) for i in range(len(W))]
+    optimal_L1 = np.sum(np.square(layerwise_optimal_norm))*beta
+else:                       
+    optimal_L1 = l_1_norm(hand_code_real_fft_network_fun(complex_n,0))*beta
 print("optimal L1 norm: %s" %(optimal_L1))
 
 reglossvec = []
