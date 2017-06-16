@@ -20,12 +20,12 @@ import matplotlib.pyplot as plt
 complex_n = 64
 n = 2*complex_n
 logn = int(np.ceil(np.log2(complex_n)))
-train_time = 1000000
+train_time = 10000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.001 #it sometimes converges at .001
-beta =0.01# 0.01 #needs to be dynamically adjusted???
+beta =0.0001# 0.01 #needs to be dynamically adjusted???
 total_error_stddev = 100
-W_init_stddev = .05 #total_error_stddev**(1/(logn+1))/n*2 #.21 #normalize this 
+W_init_stddev = .1 #total_error_stddev**(1/(logn+1))/n*2 #.21 #normalize this 
 loss_print_period = train_time/100
 traintoconv = True
 
@@ -85,11 +85,14 @@ def rectify(W,cutoff):
 # loss - do I need regularizer here?
 # regularizer = l_0_norm(W) #should this be l1 so it is convex??
 # loss = tf.reduce_sum(tf.square(output - ft_output) + beta *regularizer)
-l1_regularizer = tf.contrib.layers.l1_regularizer(scale=beta, scope=None)
-regularization_penalty = tf.contrib.layers.apply_regularization(
-        l1_regularizer, W)
+l1_regularizer = tf.contrib.layers.l1_regularizer(scale=1.0, scope=None)
+layer_penalty = []
+for i in range(len(W)):
+    layer_penalty.append(tf.square(tf.contrib.layers.apply_regularization(
+        l1_regularizer, weights_list=[W[i]])))
+regularization_penalty = tf.add_n(layer_penalty)
 fn_loss = tf.reduce_sum(tf.square(output - ft_output))
-regularized_loss = fn_loss + regularization_penalty
+regularized_loss = fn_loss + beta * regularization_penalty
 # optimizer 
 optimizer = tf.train.AdamOptimizer(optimizer_parameter)
 train = optimizer.minimize(regularized_loss)
@@ -118,7 +121,13 @@ print("complex n: %s" %complex_n)
 print("initial total weight variance scale: %s" %total_error_stddev)
 print("initial individual weight variance scale: %s" %W_init_stddev)
 
-optimal_L1 = l_1_norm(hand_code_real_fft_network_fun(complex_n,0))*beta
+
+if layerwise_l1:
+    W_opt = hand_code_real_fft_network_fun(complex_n,0)
+    layerwise_optimal_norm = [l_1_norm(W_opt[i]) for i in range(len(W))]
+    optimal_L1 = np.sum(np.square(layerwise_optimal_norm))*beta
+else:                       
+    optimal_L1 = l_1_norm(hand_code_real_fft_network_fun(complex_n,0))*beta
 print("optimal L1 norm: %s" %(optimal_L1))
 
 reglossvec = []
