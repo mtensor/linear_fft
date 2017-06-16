@@ -2,6 +2,8 @@
 from __future__ import print_function
 from __future__ import division
 import numpy as np
+import sys
+
 
 import argparse
 
@@ -96,7 +98,8 @@ elif complex_n == 128:
     W_init_stddev = .05
 elif complex_n == 256:
     W_init_stddev = .05
-                                                       
+
+print("starting job")
 
 # network parameters (weights)
 W_ft_init = hand_code_real_fft_network_fun(complex_n, W_init_stddev)
@@ -158,7 +161,7 @@ regularization_penalty = tf.contrib.layers.apply_regularization(
 fn_loss = tf.reduce_sum(tf.square(output - ft_output))
 regularized_loss = fn_loss + regularization_penalty
 # optimizer 
-optimizer = tf.train.GradientDescentOptimizer(optimizer_parameter)
+optimizer = tf.train.AdamOptimizer(optimizer_parameter)
 train = optimizer.minimize(regularized_loss)
 
 #All written out:
@@ -202,6 +205,7 @@ while (i < train_time):
     if i%loss_print_period == 0:
         print("step %s, function loss: %s, regularized loss: %s" 
               %(i,fn_loss_val,reg_loss_val))
+        sys.stdout.flush()
     
     reglossvec.append(reg_loss_val)
     fnlossvec.append(fn_loss_val)

@@ -17,10 +17,10 @@ import matplotlib.pyplot as plt
 
 
 # initial conditions
-complex_n = 256
+complex_n = 64
 n = 2*complex_n
 logn = int(np.ceil(np.log2(complex_n)))
-train_time = 1000
+train_time = 1000000
 batch_size = n #for covariance prop training
 optimizer_parameter = 0.001 #it sometimes converges at .001
 beta =0.01# 0.01 #needs to be dynamically adjusted???
@@ -91,7 +91,7 @@ regularization_penalty = tf.contrib.layers.apply_regularization(
 fn_loss = tf.reduce_sum(tf.square(output - ft_output))
 regularized_loss = fn_loss + regularization_penalty
 # optimizer 
-optimizer = tf.train.GradientDescentOptimizer(optimizer_parameter)
+optimizer = tf.train.AdamOptimizer(optimizer_parameter)
 train = optimizer.minimize(regularized_loss)
 
 #All written out:
