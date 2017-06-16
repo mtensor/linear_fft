@@ -38,7 +38,7 @@ parser.add_argument('-earlystop', action='store_true')
 
 #many of the above won't mean anything to me. Mine are below
 parser.add_argument('-beta', type=float, default=0.0001)
-parser.add_argument('-optimizer', type=float, default=0.001)
+parser.add_argument('-optimizer', type=float, default=0.0001)
 parser.add_argument('-complexsize', type=int, default=64)
 parser.add_argument('-runtoconv', action='store_true')
 parser.add_argument('-layerwise_l1', action='store_true')
@@ -87,6 +87,7 @@ beta = settings.beta# 0.01 #needs to be dynamically adjusted???
 loss_print_period = train_time/100
 traintoconv = settings.runtoconv
 layerwise_l1 = settings.layerwise_l1
+layerwise_l1 = True
 if layerwise_l1:
     print("layerwise L1 is on")
 
@@ -175,7 +176,7 @@ else: #regular l1 norm
     regularized_loss = fn_loss + regularization_penalty
 
 # optimizer 
-optimizer = tf.train.GradientDescentOptimizer(optimizer_parameter)
+optimizer = tf.train.AdamOptimizer(optimizer_parameter)
 train = optimizer.minimize(regularized_loss)
 
 #All written out:
