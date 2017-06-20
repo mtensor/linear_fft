@@ -31,7 +31,7 @@ parser.add_argument('-snr', type=float, default=1.0)
 parser.add_argument('-numsamples', type=int, default=300)
 
 
-parser.add_argument('-epochs',     type=int, default=10000) #Keep
+parser.add_argument('-epochs',     type=int, default=100000) #Keep
 parser.add_argument('-batchsize', type=int, default=-1)
 parser.add_argument('-weightscale', type=float, default=0.21) #Keep
 parser.add_argument('-earlystop', action='store_true')
@@ -39,7 +39,7 @@ parser.add_argument('-earlystop', action='store_true')
 #many of the above won't mean anything to me. Mine are below
 parser.add_argument('-beta', type=float, default=0.0001)
 parser.add_argument('-optimizer', type=float, default=0.0001)
-parser.add_argument('-complexsize', type=int, default=64)
+parser.add_argument('-complexsize', type=int, default=16)
 parser.add_argument('-runtoconv', action='store_true')
 parser.add_argument('-layerwise_l1', action='store_true')
 
@@ -106,7 +106,7 @@ elif complex_n == 256:
 print("starting job")
 
 # network parameters (weights)
-W_ft_init = hand_code_real_fft_network_fun(complex_n, W_init_stddev)
+#W_ft_init = hand_code_real_fft_network_fun(complex_n, W_init_stddev)
 #W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
 
 W = [tf.Variable(tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
@@ -177,6 +177,8 @@ else: #regular l1 norm
 
 # optimizer 
 optimizer = tf.train.AdamOptimizer(optimizer_parameter)
+print("Using Adam Optimizer")
+
 train = optimizer.minimize(regularized_loss)
 
 #All written out:
@@ -185,7 +187,7 @@ train = optimizer.minimize(regularized_loss)
 
     #input_train.append(np.random.randn(batch_size,n))
 input_train = np.identity(n)
-output_train = np.transpose(fourier_trans(input_train))
+output_train = fourier_trans(input_train)
     #the above line is surely fucked up in a major way
 
 
@@ -243,6 +245,13 @@ if not traintoconv and (reg_loss_val < optimal_L1):
 if not convergence_trigger:
     print("did not train to convergence")
 
+
+unitwise_loss = tf.square(output - ft_output)
+unit_loss = sess.run(unitwise_loss,{input_vec:input_train,ft_output:output_train})
+import matplotlib.pyplot as plt
+plt.imshow(unit_loss), plt.colorbar()
+
+unitwise_output = sess.run(output,{input_vec:input_train,ft_output:output_train})
 
 cutoff_list = [1., 2., 5., 10., 20., 50., 100.] #need to be floats
 for index in range(len(cutoff_list)):
