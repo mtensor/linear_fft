@@ -80,7 +80,7 @@ np.random.seed(settings.rseed_offset)
 # initial conditions
 complex_n = settings.complexsize
 n = 2*complex_n
-logn = int(np.ceil(np.log2(complex_n)))
+logn = int(np.ceil(np.log2(complex_n))) - 1
 train_time = settings.epochs
 batch_size = n #for covariance prop training
 optimizer_parameter = settings.optimizer #it sometimes converges at .001

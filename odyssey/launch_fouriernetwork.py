@@ -20,22 +20,22 @@ os.makedirs("/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/log
 
 weightscales = [.1]
 rseed = 2
-noffsets = 4
+noffsets = 8
 rseed_offsets = np.linspace(0,rseed*(noffsets-1),noffsets).astype(int)
 expt = settings.expt
 
-complexsizes = [16, 32, 64] #[64, 128, 256]
+complexsizes = [16, 32, 64, 128] #[64, 128, 256]
 optimizer_params = [0.0001]
 L1_betas = [0.0001] #[0.001, 0.0001, 0.00005]
-boost_factors = [1., 1.001, 1.01, 1.1]
+boost_factors = [1., 1.001]
 
 i = 1
 for n in complexsizes:
-    for optimizer in optimizer_params:
-        for beta in L1_betas:
-            for ws in weightscales:
-                for roff in rseed_offsets:
-                    for boost_factor in boost_factors:
+    for boost_factor in boost_factors:
+        for optimizer in optimizer_params:
+            for beta in L1_betas:
+                for ws in weightscales:
+                    for roff in rseed_offsets:                   
                         savefile = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data/res%d.npz" %(expt, i) 
                         fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 2000000 -savefile %s -layerwise_l1 -boost_factor %g\n" % (rseed, roff, ws, n, beta, optimizer, savefile, boost_factor))
                         i = i+1
