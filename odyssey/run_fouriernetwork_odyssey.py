@@ -39,7 +39,7 @@ parser.add_argument('-earlystop', action='store_true')
 #many of the above won't mean anything to me. Mine are below
 parser.add_argument('-beta', type=float, default=0.0001)
 parser.add_argument('-optimizer', type=float, default=0.0001)
-parser.add_argument('-complexsize', type=int, default=32)
+parser.add_argument('-complexsize', type=int, default=64)
 parser.add_argument('-runtoconv', action='store_true')
 parser.add_argument('-layerwise_l1', action='store_true')
 parser.add_argument('-boost_factor', type=float, default = 1.0)
