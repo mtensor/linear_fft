@@ -153,9 +153,11 @@ while (i < train_time):
         
     i += 1
 
+
+
+#post training stuff: 
 if not convergence_trigger:
     print("did not train to convergence")
-
     
 Wcurr = sess.run(W)
 
