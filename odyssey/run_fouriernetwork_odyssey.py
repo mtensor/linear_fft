@@ -11,16 +11,18 @@ from hand_code_real_fft_network_odyssey import hand_code_real_fft_network_fun
 parser = argparse.ArgumentParser()
 
 parser.add_argument('-paramfile', type=argparse.FileType('r')) #keep
+parser.add_argument('-line', type=int)
 parser.add_argument('-rseed', type=int, default=1) #Keep
 parser.add_argument('-rseed_offset', type=int, default=0) #Keep
 
-parser.add_argument('-epochs',     type=int, default=500000) #Keep
+parser.add_argument('-epochs',     type=int, default=100000) #Keep
 parser.add_argument('-weightscale', type=float, default=0.21) #Keep
 parser.add_argument('-beta', type=float, default=0.0001)
-parser.add_argument('-optimizer', type=float, default=0.00001)
-parser.add_argument('-complexsize', type=int, default=32)
+parser.add_argument('-optimizer', type=float, default=0.0001)
+parser.add_argument('-complexsize', type=int, default=64)
 parser.add_argument('-runtoconv', action='store_true')
 parser.add_argument('-boost_factor', type=float, default = 1.0000)
+parser.add_argument('-hidden_width_multiplier', type= int, default = 1.5)
 
 parser.add_argument('-savefile', type=argparse.FileType('w'))
 parser.add_argument('-showplot', action='store_true')
@@ -73,10 +75,18 @@ elif complex_n == 128:
 elif complex_n == 256:
     W_init_stddev = .05
 
+
 #W_ft_init = hand_code_real_fft_network_fun(complex_n, W_init_stddev)
+
 #W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
-W = [tf.Variable(tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
-    for i in range(logn + 1)]
+#
+hidden_width = int(np.ceil(settings.hidden_width_multiplier * n))
+W = []
+W.append(tf.Variable(tf.random_normal([hidden_width, n], stddev=W_init_stddev), dtype=tf.float32))
+for i in range(1,logn):
+    W.append(tf.Variable(tf.random_normal([hidden_width, hidden_width], stddev=W_init_stddev), dtype=tf.float32))
+W.append(tf.Variable(tf.random_normal([n, hidden_width], stddev=W_init_stddev), dtype=tf.float32))
+
 
 
 # network layers
