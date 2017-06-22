@@ -22,7 +22,7 @@ parser.add_argument('-optimizer', type=float, default=0.0001)
 parser.add_argument('-complexsize', type=int, default=64)
 parser.add_argument('-runtoconv', action='store_true')
 parser.add_argument('-boost_factor', type=float, default = 1.0000)
-parser.add_argument('-hidden_width_multiplier', type= int, default = 1.5)
+parser.add_argument('-hidden_width_multiplier', type=float, default = 1.5)
 
 parser.add_argument('-savefile', type=argparse.FileType('w'))
 parser.add_argument('-showplot', action='store_true')
