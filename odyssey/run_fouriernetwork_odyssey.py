@@ -156,6 +156,7 @@ init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
 
+
 print("complex n: %s" %complex_n)
 print("initial total weight variance scale: %s" %total_error_stddev)
 print("initial individual weight variance scale: %s" %W_init_stddev)
@@ -171,6 +172,7 @@ print("Using Adam Optimizer")
 print("boost factor: %s" %boost_factor)
 print("beta value: %s" %beta)
 print("optimizer value: %s" %optimizer_parameter)
+print("hidden width multiplier: %s" %settings.hidden_width_multiplier)
 
 reglossvec = []
 fnlossvec = []
