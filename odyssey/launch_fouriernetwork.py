@@ -28,18 +28,18 @@ complexsizes = [32, 64, 128] #[64, 128, 256]
 optimizer_params = [0.0001, 0.00001, 0.000001]
 L1_betas = [0.0001] #[0.001, 0.0001, 0.00005]
 boost_factors = [1., 1.0001]
-hidden_width_scales = [1., 1.2, 1.4]
+hidden_width_multipliers = [1., 1.2, 1.4]
 
 i = 1
 for n in complexsizes:
     for boost_factor in boost_factors:
-        for hidden_width_scale in hidden_width_scales:
+        for hidden_width_multiplier in hidden_width_multipliers:
             for optimizer in optimizer_params:
                 for beta in L1_betas:
                     for ws in weightscales:
                         for roff in rseed_offsets:                   
                             savefile = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data/res%d.npz" %(expt, i) 
-                            fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 2000000 -savefile %s -boost_factor %g -hidden_width_scale %g\n" % (rseed, roff, ws, n, beta, optimizer, savefile, boost_factor, hidden_width_scale))
+                            fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 2000000 -savefile %s -boost_factor %g -hidden_width_multiplier %g\n" % (rseed, roff, ws, n, beta, optimizer, savefile, boost_factor, hidden_width_multiplier))
                             i = i+1
                             #what is lr?
                             #epoch thing may need to be cut
