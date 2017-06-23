@@ -7,6 +7,8 @@ import argparse
 import tensorflow as tf
 from fourier_stuff_odyssey import fourier_trans
 from hand_code_real_fft_network_odyssey import hand_code_real_fft_network_fun
+from hand_code_real_fft_network_odyssey import hand_code_fun_layer_less
+
 
 parser = argparse.ArgumentParser()
 
@@ -19,10 +21,10 @@ parser.add_argument('-epochs',     type=int, default=100000) #Keep
 parser.add_argument('-weightscale', type=float, default=0.21) #Keep
 parser.add_argument('-beta', type=float, default=0.0001)
 parser.add_argument('-optimizer', type=float, default=0.0001)
-parser.add_argument('-complexsize', type=int, default=64)
+parser.add_argument('-complexsize', type=int, default=32)
 parser.add_argument('-runtoconv', action='store_true')
 parser.add_argument('-boost_factor', type=float, default = 1.0000)
-parser.add_argument('-hidden_width_multiplier', type=float, default = 1.5)
+parser.add_argument('-hidden_width_multiplier', type=float, default = 1.0)
 
 parser.add_argument('-savefile', type=argparse.FileType('w'))
 parser.add_argument('-showplot', action='store_true')
@@ -51,7 +53,7 @@ np.random.seed(settings.rseed_offset)
 # initial conditions
 complex_n = settings.complexsize
 n = 2*complex_n
-logn = int(np.ceil(np.log2(complex_n))) - 1
+logn = int(np.ceil(np.log2(complex_n)))
 train_time = settings.epochs
 optimizer_parameter = settings.optimizer #it sometimes converges at .001
 beta = settings.beta# 0.01 #needs to be dynamically adjusted???
@@ -76,16 +78,26 @@ elif complex_n == 256:
     W_init_stddev = .05
 
 
-#W_ft_init = hand_code_real_fft_network_fun(complex_n, W_init_stddev)
 
+######Initialize near optimal solution######
+W_ft_init = hand_code_fun_layer_less(complex_n, W_init_stddev)
 #W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
-#
+#print("starting near optimial solution")
+
+
+"""
+######Initialize with large hiddden layers#####
 hidden_width = int(np.ceil(settings.hidden_width_multiplier * n))
 W = []
 W.append(tf.Variable(tf.random_normal([hidden_width, n], stddev=W_init_stddev), dtype=tf.float32))
-for i in range(1,logn):
+for i in range(1,logn - 1): #total of logn layers
     W.append(tf.Variable(tf.random_normal([hidden_width, hidden_width], stddev=W_init_stddev), dtype=tf.float32))
 W.append(tf.Variable(tf.random_normal([n, hidden_width], stddev=W_init_stddev), dtype=tf.float32))
+"""
+
+######Initialize with identity matrix####
+W = [tf.Variable(tf.eye(n) + tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
+    for i in range(logn)]
 
 
 
@@ -161,7 +173,7 @@ print("complex n: %s" %complex_n)
 print("initial total weight variance scale: %s" %total_error_stddev)
 print("initial individual weight variance scale: %s" %W_init_stddev)
 #calculate optimal l1 norm
-W_opt = hand_code_real_fft_network_fun(complex_n,0)
+W_opt =hand_code_fun_layer_less(complex_n,0)
 layerwise_optimal_norm = [l_1_norm(W_opt[i]) for i in range(len(W))]
 optimal_L1 = np.sum(np.square(layerwise_optimal_norm))*beta
 print("optimal L1 norm: %s" %(optimal_L1))

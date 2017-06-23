@@ -79,7 +79,18 @@ def hand_code_real_fft_network_fun(n,W_init_stddev):
     return W2
 
     
-
-
+def hand_code_fun_layer_less(n,W_init_stddev):
+    #grab a hand coded network with zero noise, combine first two layers
+    W = hand_code_real_fft_network_fun(n,0)
+    rearrange_layer = W.pop(0)
+    W[0] = np.matmul(W[0],rearrange_layer)
+    
+    #add in the noise 
+    for i in range(len(W)):
+        A = np.random.normal(scale=W_init_stddev,size=[2*n,2*n])
+        W[i] = W[i] + A.astype(np.float32)
+        
+    return W
+    
     
      
