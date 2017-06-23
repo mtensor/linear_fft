@@ -24,11 +24,11 @@ noffsets = 4
 rseed_offsets = np.linspace(0,rseed*(noffsets-1),noffsets).astype(int)
 expt = settings.expt
 
-complexsizes = [256] #[64, 128, 256]
-optimizer_params = [0.0001, 0.00001, 0.000001]
+complexsizes = [16, 32, 64, 128]
+optimizer_params = [0.0001]
 L1_betas = [0.0001] #[0.001, 0.0001, 0.00005]
-boost_factors = [1., 1.0001]
-hidden_width_multipliers = [1., 1.2, 1.4]
+boost_factors = [1.]
+hidden_width_multipliers = [1., 1.2, 2.0, 5.0]
 
 i = 1
 for n in complexsizes:
@@ -39,7 +39,7 @@ for n in complexsizes:
                     for ws in weightscales:
                         for roff in rseed_offsets:                   
                             savefile = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data/res%d.npz" %(expt, i) 
-                            fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 6000000 -savefile %s -boost_factor %g -hidden_width_multiplier %g\n" % (rseed, roff, ws, n, beta, optimizer, savefile, boost_factor, hidden_width_multiplier))
+                            fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 4000000 -savefile %s -boost_factor %g -hidden_width_multiplier %g\n" % (rseed, roff, ws, n, beta, optimizer, savefile, boost_factor, hidden_width_multiplier))
                             i = i+1
                             #what is lr?
                             #epoch thing may need to be cut
