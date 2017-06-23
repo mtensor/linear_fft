@@ -81,12 +81,12 @@ elif complex_n == 256:
 
 ######Initialize near optimal solution######
 W_ft_init = hand_code_fun_layer_less(complex_n, W_init_stddev)
-#W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
-#print("starting near optimial solution")
+W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
+print("starting near optimial solution")
 
 
 """
-######Initialize with large hiddden layers#####
+######Initialize with large hiddden layers######
 hidden_width = int(np.ceil(settings.hidden_width_multiplier * n))
 W = []
 W.append(tf.Variable(tf.random_normal([hidden_width, n], stddev=W_init_stddev), dtype=tf.float32))
@@ -95,10 +95,10 @@ for i in range(1,logn - 1): #total of logn layers
 W.append(tf.Variable(tf.random_normal([n, hidden_width], stddev=W_init_stddev), dtype=tf.float32))
 """
 
-######Initialize with identity matrix####
-W = [tf.Variable(tf.eye(n) + tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
-    for i in range(logn)]
-print("initialized with noisy identity matrix")
+######Initialize with identity matrix######
+#W = [tf.Variable(tf.eye(n) + tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
+#    for i in range(logn)]
+#print("initialized with noisy identity matrix")
 
 
 # network layers
