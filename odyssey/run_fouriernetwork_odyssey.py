@@ -98,7 +98,7 @@ W.append(tf.Variable(tf.random_normal([n, hidden_width], stddev=W_init_stddev), 
 ######Initialize with identity matrix####
 W = [tf.Variable(tf.eye(n) + tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
     for i in range(logn)]
-
+print("initialized with noisy identity matrix")
 
 
 # network layers
