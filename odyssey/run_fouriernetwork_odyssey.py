@@ -77,12 +77,12 @@ elif complex_n == 128:
 elif complex_n == 256:
     W_init_stddev = .05
 
-
+W_init_stddev = 0. #DELETE THIS
 
 ######Initialize near optimal solution######
 W_ft_init = hand_code_fun_layer_less(complex_n, W_init_stddev)
-W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
-print("starting near optimial solution")
+#W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
+#print("starting near optimial solution")
 
 
 """
@@ -96,9 +96,9 @@ W.append(tf.Variable(tf.random_normal([n, hidden_width], stddev=W_init_stddev), 
 """
 
 ######Initialize with identity matrix######
-#W = [tf.Variable(tf.eye(n) + tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
-#    for i in range(logn)]
-#print("initialized with noisy identity matrix")
+W = [tf.Variable(tf.eye(n) + tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
+    for i in range(logn)]
+print("initialized with noisy identity matrix")
 
 
 # network layers
