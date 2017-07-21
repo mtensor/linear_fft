@@ -26,7 +26,7 @@ expt = settings.expt
 
 complexsizes = [16, 32, 64, 128]
 optimizer_params = [0.0001]
-L1_betas = [0.0001] #[0.001, 0.0001, 0.00005]
+L1_betas = [0.00001] #[0.001, 0.0001, 0.00005]
 boost_factors = [1.]
 hidden_width_multipliers = [1.0]
 

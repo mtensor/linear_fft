@@ -59,7 +59,10 @@ def hand_code_real_fft_network_fun(n,W_init_stddev):
     for i in range(logn):
         W_rearrange_list[i] = rearrange_rec(W[i],i)
         W[-1-i] = butterfly_rec(W[-1-i],i)
-        W_rearrange_compiled = np.matmul(W_rearrange_compiled, W_rearrange_list[i])
+        
+        #I'm flipping this now
+        #W_rearrange_compiled = np.matmul(W_rearrange_compiled, W_rearrange_list[i])
+        W_rearrange_compiled = np.matmul(W_rearrange_list[i], W_rearrange_compiled)
 
     W.insert(0, W_rearrange_compiled)
     
