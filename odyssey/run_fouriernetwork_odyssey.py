@@ -17,11 +17,11 @@ parser.add_argument('-line', type=int)
 parser.add_argument('-rseed', type=int, default=1) #Keep
 parser.add_argument('-rseed_offset', type=int, default=0) #Keep
 
-parser.add_argument('-epochs',     type=int, default=100000) #Keep
+parser.add_argument('-epochs',     type=int, default=400000) #Keep
 parser.add_argument('-weightscale', type=float, default=0.21) #Keep
-parser.add_argument('-beta', type=float, default=0.0001)
+parser.add_argument('-beta', type=float, default=0.00001) #0.0001
 parser.add_argument('-optimizer', type=float, default=0.0001)
-parser.add_argument('-complexsize', type=int, default=32)
+parser.add_argument('-complexsize', type=int, default=64)
 parser.add_argument('-runtoconv', action='store_true')
 parser.add_argument('-boost_factor', type=float, default = 1.0000)
 parser.add_argument('-hidden_width_multiplier', type=float, default = 1.0)
@@ -57,7 +57,7 @@ logn = int(np.ceil(np.log2(complex_n)))
 train_time = settings.epochs
 optimizer_parameter = settings.optimizer #it sometimes converges at .001
 beta = settings.beta# 0.01 #needs to be dynamically adjusted???
-loss_print_period = train_time/100
+loss_print_period = int(np.ceil(train_time/100.))
 traintoconv = settings.runtoconv
 
 
@@ -77,13 +77,14 @@ elif complex_n == 128:
 elif complex_n == 256:
     W_init_stddev = .05
 
-W_init_stddev = 0. #DELETE THIS
+#W_init_stddev = 0.1 #DELETE THIS
 
+"""
 ######Initialize near optimal solution######
 W_ft_init = hand_code_fun_layer_less(complex_n, W_init_stddev)
-#W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
-#print("starting near optimial solution")
-
+W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
+print("starting near optimial solution")
+"""
 
 """
 ######Initialize with large hiddden layers######
@@ -94,6 +95,7 @@ for i in range(1,logn - 1): #total of logn layers
     W.append(tf.Variable(tf.random_normal([hidden_width, hidden_width], stddev=W_init_stddev), dtype=tf.float32))
 W.append(tf.Variable(tf.random_normal([n, hidden_width], stddev=W_init_stddev), dtype=tf.float32))
 """
+
 
 ######Initialize with identity matrix######
 W = [tf.Variable(tf.eye(n) + tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
@@ -130,6 +132,21 @@ def rectify(W,cutoff):
     for i in range(len(W)):
         W_rect[i][np.abs(W[i]) < cutoff] = 0
     return W_rect
+ 
+def eval_network(input_mat,W):
+    ft = [input_mat]
+    for l in range(len(W)):
+        ft.append(np.matmul(W[l],ft[-1]))
+    ft = ft[-1]
+    return ft
+    
+def calc_error(input_mat,W):
+    ft = eval_network(input_mat, W)
+    diff = ft - fourier_trans(input_mat)
+    rect_error = sum(sum(np.square(diff)))
+    return rect_error
+    
+
     
 
 # loss
@@ -173,7 +190,7 @@ print("complex n: %s" %complex_n)
 print("initial total weight variance scale: %s" %total_error_stddev)
 print("initial individual weight variance scale: %s" %W_init_stddev)
 #calculate optimal l1 norm
-W_opt =hand_code_fun_layer_less(complex_n,0)
+W_opt = hand_code_fun_layer_less(complex_n,0)
 layerwise_optimal_norm = [l_1_norm(W_opt[i]) for i in range(len(W))]
 optimal_L1 = np.sum(np.square(layerwise_optimal_norm))*beta
 print("optimal L1 norm: %s" %(optimal_L1))
@@ -261,12 +278,8 @@ for index in range(len(cutoff_list)):
     
     #calculate error
     ft_in = np.identity(n)
-    ft = [ft_in]
-    for l in range(len(W_rect)):
-        ft.append(np.matmul(W_rect[l],ft[-1]))
-    ft = ft[-1]
-    diff = ft - fourier_trans(ft_in)
-    rect_error = sum(sum(np.square(diff)))
+    
+    rect_error = calc_error(ft_in, W_rect)
     
     print("\t Function error of rectified network: %s" %rect_error)
     #calculate L0 norm 
