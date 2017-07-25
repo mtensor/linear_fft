@@ -11,12 +11,8 @@ Run averaging code:
     
     Assuming all the runs in an experiment have been done with the same hyperparameters, 
     this code will average the desired parameters
-    
-cutoff_list = [1., 2., 5., 10., 20., 50., 100.] #need to be floats
-rect_errors = []
-l0_norms = []
-scaling_factors = []
 """
+
 import glob
 import numpy as np
 

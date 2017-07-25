@@ -17,11 +17,11 @@ parser.add_argument('-line', type=int)
 parser.add_argument('-rseed', type=int, default=1) #Keep
 parser.add_argument('-rseed_offset', type=int, default=0) #Keep
 
-parser.add_argument('-epochs',     type=int, default=100000) #Keep
+parser.add_argument('-epochs',     type=int, default=50000) #Keep
 parser.add_argument('-weightscale', type=float, default=0.21) #Keep
 parser.add_argument('-beta', type=float, default=0.00001) #0.0001
 parser.add_argument('-optimizer', type=float, default=0.0001)
-parser.add_argument('-complexsize', type=int, default=64)
+parser.add_argument('-complexsize', type=int, default=16)
 parser.add_argument('-runtoconv', action='store_true')
 parser.add_argument('-boost_factor', type=float, default = 1.0000)
 parser.add_argument('-hidden_width_multiplier', type=float, default = 1.0)
@@ -79,12 +79,12 @@ elif complex_n == 256:
 
 #W_init_stddev = 0.1 #DELETE THIS
 
-
+"""
 ######Initialize near optimal solution######
 W_ft_init = hand_code_fun_layer_less(complex_n, W_init_stddev)
 W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
 print("starting near optimial solution")
-
+"""
 
 """
 ######Initialize with large hiddden layers######
@@ -96,12 +96,12 @@ for i in range(1,logn - 1): #total of logn layers
 W.append(tf.Variable(tf.random_normal([n, hidden_width], stddev=W_init_stddev), dtype=tf.float32))
 """
 
-"""
+
 ######Initialize with identity matrix######
 W = [tf.Variable(tf.eye(n) + tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
     for i in range(logn)]
 print("initialized with noisy identity matrix")
-"""
+
 
 # network layers
 input_vec = tf.placeholder(tf.float32, shape=[n,None])
@@ -265,7 +265,7 @@ while (i < train_time):
 if (reg_loss_val > optimal_L1):
     print("did not train to convergence")
     
-Wcurr = sess.run(W)    
+  
 
 cutoff_list = [1., 2., 5., 10., 20., 50., 100.] #need to be floats
 rect_errors = []
@@ -274,6 +274,8 @@ scaling_factors = []
 
 for index in range(len(cutoff_list)):
     cutoff_factor = cutoff_list[index]
+    
+    Wcurr = sess.run(W)  
     
     #find cutoffval
     cutoff_val = abs(np.imag(np.exp(-2*np.pi*1j/complex_n))/cutoff_factor)
