@@ -94,12 +94,12 @@ for i in range(1,logn - 1): #total of logn layers
 W.append(tf.Variable(tf.random_normal([n, hidden_width], stddev=W_init_stddev), dtype=tf.float32))
 """
 
-"""
+
 ######Initialize with identity matrix######
 W = [tf.Variable(tf.eye(n) + tf.random_normal([n, n], stddev=W_init_stddev), dtype=tf.float32)
     for i in range(logn)]
 print("initialized with noisy identity matrix")
-"""
+
 
 # network layers
 input_vec = tf.placeholder(tf.float32, shape=[n,None])
