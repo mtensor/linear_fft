@@ -16,7 +16,7 @@ Run averaging code:
 import glob
 import numpy as np
 
-experiment_num = 32
+experiment_num = 44
 complex_size = 16
 
 directory_path = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data/" % experiment_num
