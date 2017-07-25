@@ -17,6 +17,8 @@ import glob
 import numpy as np
 
 experiment_num = 32
+complex_size = 16
+
 directory_path = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data/" % experiment_num
 
 cutoff_list_list = []
@@ -26,14 +28,17 @@ scaling_factors_list = []
 fun_loss_list = []
 
 for res_num in glob.glob(directory_path + '*.npz'):
-    variables = np.load(res_num) #or something 
+    variables = np.load(res_num)
+    run_params = variables['params'][0]
     
-    cutoff_list_list.append(variables['cutoff_list'])
-    rect_errors_list.append(variables['rect_errors'])
-    l0_norms_list.append(variables['l0_norms'])
-    scaling_factors_list.append(variables['scaling_factors'])
+    if run_params.complexsize == 16:
     
-    fun_loss_list.append(variables['fnlossvec'][-1])
+        cutoff_list_list.append(variables['cutoff_list'])
+        rect_errors_list.append(variables['rect_errors'])
+        l0_norms_list.append(variables['l0_norms'])
+        scaling_factors_list.append(variables['scaling_factors'])
+    
+        fun_loss_list.append(variables['fnlossvec'][-1])
     
 assert (cutoff_list_list[0] == cutoff_list_list[i] for i in range(len(cutoff_list_list)))
 cutoff_list = cutoff_list_list
