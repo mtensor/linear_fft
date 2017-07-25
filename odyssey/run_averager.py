@@ -27,17 +27,17 @@ cutoff_list_list = []
 rect_errors_list = []
 l0_norms_list = []
 scaling_factors_list = []
+fun_loss_list = []
 
 for res_num in glob.glob(directory_path + '*.npz'):
     variables = np.load(res_num) #or something 
     
     cutoff_list_list.append(variables['cutoff_list'])
-
     rect_errors_list.append(variables['rect_errors'])
-
     l0_norms_list.append(variables['l0_norms'])
-
     scaling_factors_list.append(variables['scaling_factors'])
+    
+    fun_loss_list.append(variables['fnlossvec'][-1])
     
 assert (cutoff_list_list[0] == cutoff_list_list[i] for i in range(len(cutoff_list_list)))
 cutoff_list = cutoff_list_list
@@ -50,7 +50,9 @@ av_rect_error = np.mean(rect_errors_array, axis=0)
 av_l0_norm = np.mean(l0_norms_array, axis = 0)
 av_scaling_factor = np.mean(scaling_factors_array, axis=0)
 
+av_fun_loss = np.mean(fun_loss_list)
 
+print("Final average function error (unrectified): %s" %av_fun_loss)
 for index in range(len(cutoff_list)):
     print("Cutoff factor: %s" %cutoff_list(index))
     print("\t Average function error of rectified network: %s" %av_rect_error(index))
