@@ -20,7 +20,7 @@ scaling_factors = []
 import glob
 import numpy as np
 
-experiment_num = 33
+experiment_num = 32
 directory_path = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data/" % experiment_num
 
 cutoff_list_list = []
