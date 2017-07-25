@@ -17,11 +17,11 @@ parser.add_argument('-line', type=int)
 parser.add_argument('-rseed', type=int, default=1) #Keep
 parser.add_argument('-rseed_offset', type=int, default=0) #Keep
 
-parser.add_argument('-epochs',     type=int, default=200000) #Keep
+parser.add_argument('-epochs',     type=int, default=100000) #Keep
 parser.add_argument('-weightscale', type=float, default=0.21) #Keep
 parser.add_argument('-beta', type=float, default=0.00001) #0.0001
 parser.add_argument('-optimizer', type=float, default=0.0001)
-parser.add_argument('-complexsize', type=int, default=32)
+parser.add_argument('-complexsize', type=int, default=64)
 parser.add_argument('-runtoconv', action='store_true')
 parser.add_argument('-boost_factor', type=float, default = 1.0000)
 parser.add_argument('-hidden_width_multiplier', type=float, default = 1.0)
@@ -265,11 +265,15 @@ while (i < train_time):
 if (reg_loss_val > optimal_L1):
     print("did not train to convergence")
     
+Wcurr = sess.run(W)    
 
 cutoff_list = [1., 2., 5., 10., 20., 50., 100.] #need to be floats
+rect_errors = []
+l0_norms = []
+scaling_factors = []
+
 for index in range(len(cutoff_list)):
     cutoff_factor = cutoff_list[index]
-    Wcurr = sess.run(W)
     
     #find cutoffval
     cutoff_val = abs(np.imag(np.exp(-2*np.pi*1j/complex_n))/cutoff_factor)
@@ -280,21 +284,26 @@ for index in range(len(cutoff_list)):
     ft_in = np.identity(n)
     
     rect_error = calc_error(ft_in, W_rect)
-    
+    rect_errors.append(rect_error)
     print("\t Function error of rectified network: %s" %rect_error)
+    
     #calculate L0 norm 
     l0_norm = l0norm(W_rect)
+    l0_norms.append(l0_norm)
     print("\t L_0 norm: %s"%l0_norm)
     
     #calculate scaling factor
     nlogn = float(complex_n * logn)
     scaling_factor = l0_norm / nlogn
+    scaling_factors.append(scaling_factor)
     print("\t Complexity scaling factor: %s (ideal value is 8)" %scaling_factor)
     #expected value is 8
 
 
 if settings.savefile:
-    np.savez(settings.savefile, reglossvec=reglossvec, fnlossvec=fnlossvec, W=Wcurr, params=[settings])
+    np.savez(settings.savefile, reglossvec=reglossvec, fnlossvec=fnlossvec, W=Wcurr, 
+             cutoff_list=cutoff_list, rect_errors=rect_errors, l0_norms=l0_norms, scaling_factors=scaling_factors,
+             params=[settings])
 
 
 
