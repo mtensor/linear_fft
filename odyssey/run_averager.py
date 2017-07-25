@@ -27,11 +27,13 @@ l0_norms_list = []
 scaling_factors_list = []
 fun_loss_list = []
 
+print(glob.glob(directory_path + '*.npz'))
+
 for res_num in glob.glob(directory_path + '*.npz'):
     variables = np.load(res_num)
     run_params = variables['params'][0]
     
-    if run_params.complexsize == 16:
+    if run_params.complexsize == complex_size:
     
         cutoff_list_list.append(variables['cutoff_list'])
         rect_errors_list.append(variables['rect_errors'])
