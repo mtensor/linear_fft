@@ -42,6 +42,7 @@ for res_num in glob.glob(directory_path + '*.npz'):
     
             fun_loss_list.append(variables['fnlossvec'][-1])
     except IOError:
+        print("there exists a trial which is not complete")
         #Whatever man    
 assert (cutoff_list_list[0] == cutoff_list_list[i] for i in range(len(cutoff_list_list)))
 cutoff_list = cutoff_list_list
