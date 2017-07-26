@@ -57,8 +57,7 @@ av_fun_loss = np.mean(fun_loss_list)
 
 print("Final average function error (unrectified): %s" %av_fun_loss)
 for index in range(len(cutoff_list)):
-    print(cutoff_list(index))
-    print("Cutoff factor: %s" %(cutoff_list(index)))
-    print("\t Average function error of rectified network: %s" %(av_rect_error(index)))
-    print("\t Average L_0 norm: %s"%(av_l0_norm(index)))
-    print("\t Average Complexity scaling factor: %s (ideal value is 8)" %(av_scaling_factor(index)))
+    print("Cutoff factor: %s" %(cutoff_list[index]))
+    print("\t Average function error of rectified network: %s" %(av_rect_error[index]))
+    print("\t Average L_0 norm: %s"%(av_l0_norm[index]))
+    print("\t Average Complexity scaling factor: %s (ideal value is 8)" %(av_scaling_factor[index]))
