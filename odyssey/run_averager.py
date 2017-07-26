@@ -27,8 +27,6 @@ l0_norms_list = []
 scaling_factors_list = []
 fun_loss_list = []
 
-print(glob.glob(directory_path + '*.npz'))
-
 for res_num in glob.glob(directory_path + '*.npz'):
     try:
         variables = np.load(res_num)
@@ -45,7 +43,7 @@ for res_num in glob.glob(directory_path + '*.npz'):
         print("there exists a trial which is not complete")
         #Whatever man    
 assert (cutoff_list_list[0] == cutoff_list_list[i] for i in range(len(cutoff_list_list)))
-cutoff_list = cutoff_list_list
+cutoff_list = cutoff_list_list[0]
  
 rect_errors_array = np.array(rect_errors_list)
 l0_norms_array = np.array(l0_norms_list)
