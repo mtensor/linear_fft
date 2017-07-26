@@ -30,18 +30,19 @@ fun_loss_list = []
 print(glob.glob(directory_path + '*.npz'))
 
 for res_num in glob.glob(directory_path + '*.npz'):
-    variables = np.load(res_num)
-    run_params = variables['params'][0]
+    try:
+        variables = np.load(res_num)
+        run_params = variables['params'][0]    
+        
+        if run_params.complexsize == complex_size:
+            cutoff_list_list.append(variables['cutoff_list'])
+            rect_errors_list.append(variables['rect_errors'])
+            l0_norms_list.append(variables['l0_norms'])
+            scaling_factors_list.append(variables['scaling_factors'])
     
-    if run_params.complexsize == complex_size:
-    
-        cutoff_list_list.append(variables['cutoff_list'])
-        rect_errors_list.append(variables['rect_errors'])
-        l0_norms_list.append(variables['l0_norms'])
-        scaling_factors_list.append(variables['scaling_factors'])
-    
-        fun_loss_list.append(variables['fnlossvec'][-1])
-    
+            fun_loss_list.append(variables['fnlossvec'][-1])
+    except IOError:
+        #Whatever man    
 assert (cutoff_list_list[0] == cutoff_list_list[i] for i in range(len(cutoff_list_list)))
 cutoff_list = cutoff_list_list
  
