@@ -16,10 +16,17 @@ Run averaging code:
 import glob
 import numpy as np
 from hand_code_real_fft_network_odyssey import hand_code_fun_layer_less
-from run_fouriernetwork_odyssey import l0norm
 
 experiment_num = 44
 complex_size = 16
+
+
+def l0norm(W):
+    norm0 = 0
+    for i in range(len(W)):
+        ones = np.ones(W[i].shape)
+        norm0 = norm0 + np.sum(ones[W[i] != 0])
+    return norm0
 
 directory_path = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data/" % experiment_num
 
