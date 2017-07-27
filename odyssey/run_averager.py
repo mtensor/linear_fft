@@ -15,6 +15,8 @@ Run averaging code:
 
 import glob
 import numpy as np
+from hand_code_real_fft_network_odyssey import hand_code_fun_layer_less
+from run_fouriernetwork import l0norm
 
 experiment_num = 44
 complex_size = 16
@@ -55,9 +57,11 @@ av_scaling_factor = np.mean(scaling_factors_array, axis=0)
 
 av_fun_loss = np.mean(fun_loss_list)
 
-print("Final average function error (unrectified): %s" %av_fun_loss)
+optimal_L0 = l0norm(hand_code_fun_layer_less(complex_size,0))
+
+print("Final average function error (unrectified): %g" %av_fun_loss)
 for index in range(len(cutoff_list)):
-    print("Cutoff factor: %s" %(cutoff_list[index]))
-    print("\t Average function error of rectified network: %s" %(av_rect_error[index]))
-    print("\t Average L_0 norm: %s"%(av_l0_norm[index]))
-    print("\t Average Complexity scaling factor: %s (ideal value is 8)" %(av_scaling_factor[index]))
+    print("Cutoff factor: %g" %(cutoff_list[index]))
+    print("\t Average function error of rectified network: %g" %(av_rect_error[index]))
+    print("\t Average L_0 norm: %g"%(av_l0_norm[index]))
+    print("\t Average Complexity scaling factor: %g (ideal value is %g)" %(av_scaling_factor[index], optimal_L0))
