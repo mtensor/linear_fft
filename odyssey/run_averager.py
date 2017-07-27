@@ -16,7 +16,7 @@ Run averaging code:
 import glob
 import numpy as np
 from hand_code_real_fft_network_odyssey import hand_code_fun_layer_less
-from run_fouriernetwork import l0norm
+from run_fouriernetwork_odyssey import l0norm
 
 experiment_num = 44
 complex_size = 16
