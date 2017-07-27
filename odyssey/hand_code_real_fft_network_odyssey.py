@@ -8,6 +8,7 @@ Created on Sun May  7 19:34:50 2017
 import numpy as np
 
 def hand_code_real_fft_network_fun(n,W_init_stddev):
+    import numpy as np
     #must be power of 2
     logn = int(np.log2(n))
     
