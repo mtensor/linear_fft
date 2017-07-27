@@ -15,6 +15,7 @@ Run averaging code:
 
 import glob
 import numpy as np
+from hand_code_real_fft_network_odyssey import hand_code_real_fft_network_fun
 from hand_code_real_fft_network_odyssey import hand_code_fun_layer_less
 
 experiment_num = 44
