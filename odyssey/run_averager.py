@@ -67,9 +67,13 @@ av_fun_loss = np.mean(fun_loss_list)
 
 optimal_L0 = l0norm(hand_code_fun_layer_less(complex_size,0))
 
+logn = int(np.ceil(np.log2(complex_size)))
+nlogn = float(complex_size * logn)
+optimal_scale_factor = optimal_L0 / nlogn
+
 print("Final average function error (unrectified): %g" %av_fun_loss)
 for index in range(len(cutoff_list)):
     print("Cutoff factor: %g" %(cutoff_list[index]))
     print("\t Average function error of rectified network: %g" %(av_rect_error[index]))
-    print("\t Average L_0 norm: %g"%(av_l0_norm[index]))
-    print("\t Average Complexity scaling factor: %g (ideal value is %g)" %(av_scaling_factor[index], optimal_L0))
+    print("\t Average L_0 norm: %g (hand-coded value is %g) "%(av_l0_norm[index], optimal_L0))
+    print("\t Average Complexity scaling factor: %g (hand-coded value is %g)" %(av_scaling_factor[index], optimal_scale_factor))

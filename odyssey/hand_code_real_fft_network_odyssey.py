@@ -8,7 +8,6 @@ Created on Sun May  7 19:34:50 2017
 import numpy as np
 
 def hand_code_real_fft_network_fun(n,W_init_stddev):
-    import numpy as np
     #must be power of 2
     logn = int(np.log2(n))
     
@@ -84,7 +83,6 @@ def hand_code_real_fft_network_fun(n,W_init_stddev):
 
     
 def hand_code_fun_layer_less(n,W_init_stddev):
-    import numpy as np
     #grab a hand coded network with zero noise, combine first two layers
     W = hand_code_real_fft_network_fun(n,0)
     rearrange_layer = W.pop(0)
