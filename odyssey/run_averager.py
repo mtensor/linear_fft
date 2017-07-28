@@ -15,11 +15,20 @@ Run averaging code:
 
 import glob
 import numpy as np
+import argparse
 from hand_code_real_fft_network_odyssey import hand_code_real_fft_network_fun
 from hand_code_real_fft_network_odyssey import hand_code_fun_layer_less
 
-experiment_num = 44
-complex_size = 16
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('-expt', type=int)
+parser.add_argument('-size', type=int)
+
+settings = parser.parse_args(); 
+
+experiment_num = settings.expt
+complex_size = settings.size
 
 
 def l0norm(W):
