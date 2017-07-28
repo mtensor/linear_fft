@@ -51,7 +51,7 @@ for res_num in glob.glob(directory_path + '*.npz'):
         variables = np.load(res_num)
         run_params = variables['params'][0]    
         
-        if run_params.complexsize == complex_size and (variables['fnlossvec'][-1] < 128.):
+        if run_params.complexsize == complex_size and (variables['fnlossvec'][-1] < 16.):
             cutoff_list_list.append(variables['cutoff_list'])
             rect_errors_list.append(variables['rect_errors'])
             l0_norms_list.append(variables['l0_norms'])
