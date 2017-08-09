@@ -18,7 +18,7 @@ os.makedirs("/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/log
 
 #depths
 
-weightscales = [.1]
+weightscales = [1.]
 rseed = 2
 noffsets = 16
 rseed_offsets = np.linspace(0,rseed*(noffsets-1),noffsets).astype(int)

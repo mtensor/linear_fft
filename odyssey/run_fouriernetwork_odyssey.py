@@ -65,8 +65,9 @@ print("layerwise L1 is on")
 
 
 #weight initialization
-total_error_stddev = 100
-W_init_stddev = settings.weightscale #total_error_stddev**(1/(logn+1))/n*2 #.21
+"""
+#total_error_stddev = 100
+#W_init_stddev = settings.weightscale #total_error_stddev**(1/(logn+1))/n*2 #.21
 
 if complex_n == 16:
     W_init_stddev = .21
@@ -76,7 +77,9 @@ elif complex_n == 128:
     W_init_stddev = .1 #0.05
 elif complex_n == 256:
     W_init_stddev = .05
+"""
 
+W_init_stddev = settings.weightscale / np.sqrt(n)
 
 ######Initialize near optimal solution######
 W_ft_init = hand_code_fun_layer_less(complex_n, W_init_stddev)
@@ -185,7 +188,7 @@ sess.run(init)
 
 
 print("complex n: %s" %complex_n)
-print("initial total weight variance scale: %s" %total_error_stddev)
+print("initial total weight variance scale: %s" %settings.weightscale)
 print("initial individual weight variance scale: %s" %W_init_stddev)
 #calculate optimal l1 norm
 W_opt = hand_code_fun_layer_less(complex_n,0)
@@ -270,6 +273,10 @@ rect_errors = []
 l0_norms = []
 scaling_factors = []
 
+optimal_L0 = l0norm(hand_code_fun_layer_less(complex_n,0))
+nlogn = float(complex_n * logn)
+optimal_scale_factor = optimal_L0 / nlogn
+
 for index in range(len(cutoff_list)):
     cutoff_factor = cutoff_list[index]
     
@@ -290,13 +297,14 @@ for index in range(len(cutoff_list)):
     #calculate L0 norm 
     l0_norm = l0norm(W_rect)
     l0_norms.append(l0_norm)
-    print("\t L_0 norm: %s"%l0_norm)
+    print("\t L_0 norm: %g (hand-coded value is %g) "%(l0_norm, optimal_L0))
     
     #calculate scaling factor
     nlogn = float(complex_n * logn)
     scaling_factor = l0_norm / nlogn
     scaling_factors.append(scaling_factor)
-    print("\t Complexity scaling factor: %s (ideal value is 8)" %scaling_factor)
+    print("\t Complexity scaling factor: %g (hand-coded value is %g)" %(scaling_factor, optimal_scale_factor))
+
     #expected value is 8
 
 
