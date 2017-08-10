@@ -17,8 +17,8 @@ parser.add_argument('-line', type=int)
 parser.add_argument('-rseed', type=int, default=1) #Keep
 parser.add_argument('-rseed_offset', type=int, default=0) #Keep
 
-parser.add_argument('-epochs',     type=int, default=200000) #Keep
-parser.add_argument('-weightscale', type=float, default=0.21) #Keep
+parser.add_argument('-epochs',     type=int, default=100000) #Keep
+parser.add_argument('-weightscale', type=float, default=1.) #Keep
 parser.add_argument('-beta', type=float, default=0.00001) #0.0001
 parser.add_argument('-optimizer', type=float, default=0.0001)
 parser.add_argument('-complexsize', type=int, default=16)
@@ -86,7 +86,6 @@ W_ft_init = hand_code_fun_layer_less(complex_n, W_init_stddev)
 W = [tf.Variable(W_ft_init[i]) for i in range(len(W_ft_init))]
 print("starting near optimial solution")
 
-
 """
 ######Initialize with large hiddden layers######
 hidden_width = int(np.ceil(settings.hidden_width_multiplier * n))
@@ -147,6 +146,21 @@ def calc_error(input_mat,W):
     rect_error = sum(sum(np.square(diff)))
     return rect_error
     
+def key_cutoff_finder(W, max_cutoff):  
+    
+    def cutoff_recurse(W, recurse_depth, max_cutoff, min_cutoff,unrect_error):
+        mid_cutoff = (max_cutoff + min_cutoff)/2.
+        if recurse_depth == 0:     
+            return mid_cutoff
+        elif calc_error(np.identity(W[0].shape[0]), rectify(W,mid_cutoff)) < unrect_error:
+            return cutoff_recurse(W, recurse_depth - 1, max_cutoff , mid_cutoff, unrect_error)
+        elif calc_error(np.identity(W[0].shape[0]), rectify(W,mid_cutoff)) > unrect_error:
+            return cutoff_recurse(W, recurse_depth - 1, mid_cutoff , min_cutoff, unrect_error)
+    
+    recurse_depth = 10
+    min_cutoff = 0
+    unrect_error = calc_error(np.identity(W[0].shape[0]), W)
+    return cutoff_recurse(W, recurse_depth, max_cutoff, min_cutoff,unrect_error)
 
     
 
@@ -305,8 +319,12 @@ for index in range(len(cutoff_list)):
     scaling_factors.append(scaling_factor)
     print("\t Complexity scaling factor: %g (hand-coded value is %g)" %(scaling_factor, optimal_scale_factor))
 
-    #expected value is 8
 
+Wcurr = sess.run(W)
+max_cutoff = abs(np.imag(np.exp(-2*np.pi*1j/complex_n)))
+key_cutoff = key_cutoff_finder(Wcurr, max_cutoff)
+
+print("Key_cutoff_factor: %g" %(max_cutoff/key_cutoff))
 
 if settings.savefile:
     np.savez(settings.savefile, reglossvec=reglossvec, fnlossvec=fnlossvec, W=Wcurr, 
