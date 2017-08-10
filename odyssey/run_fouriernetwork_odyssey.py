@@ -17,7 +17,7 @@ parser.add_argument('-line', type=int)
 parser.add_argument('-rseed', type=int, default=1) #Keep
 parser.add_argument('-rseed_offset', type=int, default=0) #Keep
 
-parser.add_argument('-epochs',     type=int, default=100000) #Keep
+parser.add_argument('-epochs',     type=int, default=10000) #Keep
 parser.add_argument('-weightscale', type=float, default=1.) #Keep
 parser.add_argument('-beta', type=float, default=0.00001) #0.0001
 parser.add_argument('-optimizer', type=float, default=0.0001)
@@ -324,13 +324,13 @@ Wcurr = sess.run(W)
 max_cutoff = abs(np.imag(np.exp(-2*np.pi*1j/complex_n)))
 key_cutoff = key_cutoff_finder(Wcurr, max_cutoff)
 
-print("Key_cutoff_factor: %g" %(max_cutoff/key_cutoff))
+key_cutoff_factor = max_cutoff/key_cutoff
+print("Key_cutoff_factor: %g" %(key_cutoff_factor))
 
 if settings.savefile:
     np.savez(settings.savefile, reglossvec=reglossvec, fnlossvec=fnlossvec, W=Wcurr, 
-             cutoff_list=cutoff_list, rect_errors=rect_errors, l0_norms=l0_norms, scaling_factors=scaling_factors,
-             params=[settings])
-
+             cutoff_list=cutoff_list, rect_errors=rect_errors, l0_norms=l0_norms, 
+             scaling_factors=scaling_factors,key_cutoff_factor=key_cutoff_factor, params=[settings])
 
 
 #deal with this later 

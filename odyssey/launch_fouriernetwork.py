@@ -45,4 +45,4 @@ for n in complexsizes:
                             #epoch thing may need to be cut
 fo.close()
 
-call("python run_odyssey_array.py -mock -cmd run_fouriernetwork_odyssey.py -expt %d -cores 8 -hours 25 -mem 24000 -partition serial_requeue -paramfile %s" % (expt,param_fn), shell=True)
+call("python run_odyssey_array.py -cmd run_fouriernetwork_odyssey.py -expt %d -cores 8 -hours 25 -mem 24000 -partition serial_requeue -paramfile %s" % (expt,param_fn), shell=True)
