@@ -280,7 +280,9 @@ while (i < train_time):
 if (reg_loss_val > optimal_L1):
     print("did not train to convergence")
     
-  
+Wcurr = sess.run(W)
+
+print("Final error after training: %g" %(calc_error(np.identity(n),Wcurr)))
 
 cutoff_list = [1., 2., 5., 10., 20., 50., 100.] #need to be floats
 rect_errors = []
