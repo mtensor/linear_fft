@@ -148,23 +148,38 @@ def calc_error(input_mat,W):
     rect_error = sum(sum(np.square(diff)))
     return rect_error
     
-def key_cutoff_finder(W, max_cutoff):  
+    #this assumes smoothness in error as a fn of rectification
+# def key_cutoff_finder(W, max_cutoff):  
     
-    def cutoff_recurse(W, recurse_depth, max_cutoff, min_cutoff,unrect_error):
-        mid_cutoff = (max_cutoff + min_cutoff)/2.
-        if recurse_depth == 0:     
-            return mid_cutoff
-        elif calc_error(np.identity(W[0].shape[0]), rectify(W,mid_cutoff)) < unrect_error:
-            return cutoff_recurse(W, recurse_depth - 1, max_cutoff , mid_cutoff, unrect_error)
-        elif calc_error(np.identity(W[0].shape[0]), rectify(W,mid_cutoff)) > unrect_error:
-            return cutoff_recurse(W, recurse_depth - 1, mid_cutoff , min_cutoff, unrect_error)
+#     def cutoff_recurse(W, recurse_depth, max_cutoff, min_cutoff, unrect_error):
+#         mid_cutoff = (max_cutoff + min_cutoff)/2.
+#         mid_error = calc_error(np.identity(W[0].shape[0]), rectify(W,mid_cutoff))
+#         max_error = calc_error(np.identity(W[0].shape[0]), rectify(W,max_cutoff))
+#         if recurse_depth == 0:     
+#             return mid_cutoff
+#         elif mid_error  =< unrect_error:
+#             return cutoff_recurse(W, recurse_depth - 1, max_cutoff , mid_cutoff, unrect_error)
+#         elif mid_error > unrect_error:
+#             return cutoff_recurse(W, recurse_depth - 1, mid_cutoff , min_cutoff, unrect_error)
     
-    recurse_depth = 10
-    min_cutoff = 0
-    unrect_error = calc_error(np.identity(W[0].shape[0]), W)
-    return cutoff_recurse(W, recurse_depth, max_cutoff, min_cutoff,unrect_error)
+#     recurse_depth = 10
+#     min_cutoff = 0
+#     unrect_error = calc_error(np.identity(W[0].shape[0]), W)
+#     return cutoff_recurse(W, recurse_depth, max_cutoff, min_cutoff, unrect_error)
 
     
+def key_cutoff_finder(W, max_cutoff):
+    specificity = 1000
+    key_cutoff = 0.
+    key_cutoff_error = calc_error(np.identity(W[0].shape[0]), W)
+    cutoff_list = np.arange(0.,max_cutoff, specificity)
+    for cutoff in cutoff_list:
+        cutoff_error = calc_error(np.identity(W[0].shape[0]), rectify(W, cutoff))
+        if cutoff_error <= key_cutoff_error:
+            key_cutoff = cutoff
+            key_cutoff_error = cutoff_error
+    return key_cutoff
+
 
 # loss
 l1_regularizer = tf.contrib.layers.l1_regularizer(scale=1.0, scope=None)
