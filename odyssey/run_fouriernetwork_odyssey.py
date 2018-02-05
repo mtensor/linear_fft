@@ -172,7 +172,7 @@ def key_cutoff_finder(W, max_cutoff):
     specificity = 1000
     key_cutoff = 0.
     key_cutoff_error = calc_error(np.identity(W[0].shape[0]), W)
-    cutoff_list = np.arange(0.,max_cutoff, specificity)
+    cutoff_list = np.arange(0.,max_cutoff, max_cutoff/specificity)
     for cutoff in cutoff_list:
         cutoff_error = calc_error(np.identity(W[0].shape[0]), rectify(W, cutoff))
         if cutoff_error <= key_cutoff_error:
