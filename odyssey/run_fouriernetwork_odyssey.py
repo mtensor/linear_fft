@@ -295,8 +295,18 @@ optimal_L0 = l0norm(hand_code_fun_layer_less(complex_n,0))
 nlogn = float(complex_n * logn)
 optimal_scale_factor = optimal_L0 / nlogn
 
-for index in range(len(cutoff_list)):
-    cutoff_factor = cutoff_list[index]
+#find key cutoff factor stuff
+Wcurr = sess.run(W)
+max_cutoff = abs(np.imag(np.exp(-2*np.pi*1j/complex_n)))
+key_cutoff = key_cutoff_finder(Wcurr, max_cutoff)
+key_cutoff_factor = max_cutoff/key_cutoff
+print("Key_cutoff_factor: %g" %(key_cutoff_factor))
+print("key_cutoff: %g" %(key_cutoff))
+
+cutoff_list.append(key_cutoff_factor)
+
+
+for cutoff_factor in cutoff_list:
     
     Wcurr = sess.run(W)  
     
@@ -324,17 +334,15 @@ for index in range(len(cutoff_list)):
     print("\t Complexity scaling factor: %g (hand-coded value is %g)" %(scaling_factor, optimal_scale_factor))
 
 
-Wcurr = sess.run(W)
-max_cutoff = abs(np.imag(np.exp(-2*np.pi*1j/complex_n)))
-key_cutoff = key_cutoff_finder(Wcurr, max_cutoff)
 
-key_cutoff_factor = max_cutoff/key_cutoff
-print("Key_cutoff_factor: %g" %(key_cutoff_factor))
+
+
+
 
 if settings.savefile:
     np.savez(settings.savefile, reglossvec=reglossvec, fnlossvec=fnlossvec, W=Wcurr, 
              cutoff_list=cutoff_list, rect_errors=rect_errors, l0_norms=l0_norms, 
-             scaling_factors=scaling_factors,key_cutoff_factor=key_cutoff_factor, params=[settings])
+             scaling_factors=scaling_factors, key_cutoff=key_cutoff, key_cutoff_factor=key_cutoff_factor, params=[settings])
 
 
 #deal with this later 
