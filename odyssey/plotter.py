@@ -76,4 +76,4 @@ ax.set(title='FFT convergence',
        ylabel='key cutoff value')
 
 #fig.savefig(plotpath + "paritysize%d.png" % size, dpi=200)
-fig.savefig('FFTexpt%dsize%d.png' %(experiment_num, size), dpi = 200)
+fig.savefig('FFTexpt%dsize%d.png' %(experiment_num, complex_size), dpi = 200)
