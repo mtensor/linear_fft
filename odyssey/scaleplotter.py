@@ -33,6 +33,7 @@ complex_size = settings.size
 weight_in = 1.
 weight_out = 4.
 
+complex_sizes = [16, 32, 64, 128]
 
 
 def l0norm(W):
@@ -44,24 +45,19 @@ def l0norm(W):
 
 directory_path = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data/" % experiment_num
 
-cutoff_list_list = []
-rect_errors_list = []
-l0_norms_list = []
-scaling_factors_list = []
-fun_loss_list = []
+size_list = []
+scaling_factor_list = []
 
 for res_num in glob.glob(directory_path + '*.npz'):
     try:
         variables = np.load(res_num)
         run_params = variables['params'][0]    
         
-        if run_params.complexsize == complex_size and (variables['fnlossvec'][-1] < 16.):
-            cutoff_list_list.append(variables['cutoff_list'])
-            rect_errors_list.append(variables['rect_errors'])
-            l0_norms_list.append(variables['l0_norms'])
-            scaling_factors_list.append(variables['scaling_factors'])
+        if (run_params.complexsize in complex_sizes) and (variables['fnlossvec'][-1] < 16.):
+            
+            size_list.append(run_params.complexsize)
+            scaling_factor_list.append(variables['scaling_factors'][-1])
     
-            fun_loss_list.append(variables['fnlossvec'][-1])
     except IOError:
         print("there exists a trial which is not complete")
         #Whatever man    
@@ -93,10 +89,7 @@ for index in range(len(cutoff_list)):
 
 
 
-
-
 #sample for the plotting
-"""
 x1 = np.arange(1,5,.1)
 y1 = np.arange(1,5,.1)
 
@@ -113,4 +106,3 @@ ax.set(title='FFT convergence',
        ylabel='key cutoff value')
 ax.legend(loc='best') 
 fig.savefig('FFTexpt%dsize%d.png' %(experiment_num, complex_size), dpi = 200)
-"""
