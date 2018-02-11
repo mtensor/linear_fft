@@ -18,6 +18,9 @@ import numpy as np
 import argparse
 from hand_code_real_fft_network_odyssey import hand_code_real_fft_network_fun
 from hand_code_real_fft_network_odyssey import hand_code_fun_layer_less
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 
 parser = argparse.ArgumentParser()
