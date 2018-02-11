@@ -18,13 +18,13 @@ os.makedirs("/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/log
 
 #depths
 
-weightscales = [1.,1.25, 1.5, 1.75, 2., 2.25, 2.5, 2.75 , 3, 3.25, 3.5, 3.75, 4.]
+weightscales = [1., 4.]
 rseed = 2
 noffsets = 1
 rseed_offsets = np.linspace(0,rseed*(noffsets-1),noffsets).astype(int)
 expt = settings.expt
 
-complexsizes = [32]
+complexsizes = [16,32,64,128]
 optimizer_params = [0.0001]
 L1_betas = [0.00001] #[0.001, 0.0001, 0.00005]
 boost_factors = [1.]
