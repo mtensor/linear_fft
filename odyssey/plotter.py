@@ -70,7 +70,7 @@ fig = plt.figure()
 fig, ax = plt.subplots()
 print "weightscale_list", weightscale_list
 print "key key_cutoff list", key_cutoff_list
-plt.plot(weightscale_list,key_cutoff_list)
+plt.plot(weightscale_list,key_cutoff_list,linewidth=4.0)
 ax.set(title='FFT convergence',
        xlabel='Weight initialization noise scale',
        ylabel='key cutoff value')
