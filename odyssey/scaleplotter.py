@@ -33,7 +33,7 @@ settings = parser.parse_args();
 experiment_num = settings.expt
 
 weight_in = 1.
-weight_out = 4.
+weight_out = 3.
 
 complex_sizes = [16, 32, 64, 128]
 
@@ -86,12 +86,16 @@ order_out = np.argsort(size_list_out)
 size_list_out= np.array(size_list_out)[order_out]
 scaling_factor_list_out = np.array(scaling_factor_list_out)[order_out]
 
-assert size_list_out == size_list_in
+assert (size_list_out == size_list_in).all()
 
+print "in", scaling_factor_list_in
+print "out", scaling_factor_list_out
+
+print "sizelist", size_list_in
 #sample for the plotting
 fig = plt.figure()
 fig, ax = plt.subplots()
-ax.plot(size_list_in, scaling_factor_list_in, label='in')
+ax.plot(size_list_in, scaling_factor_list_in,label='in')
 ax.plot(size_list_out, scaling_factor_list_out, label='out')
 ax.plot(size_list_in, true_scales, label='true scale')
 
