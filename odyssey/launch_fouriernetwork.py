@@ -20,7 +20,7 @@ os.makedirs("/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/log
 
 weightscales = [1.,1.25, 1.5, 1.75, 2., 2.25, 2.5, 2.75 , 3, 3.25, 3.5, 3.75, 4.]
 rseed = 2
-noffsets = 4
+noffsets = 1
 rseed_offsets = np.linspace(0,rseed*(noffsets-1),noffsets).astype(int)
 expt = settings.expt
 
@@ -39,7 +39,7 @@ for n in complexsizes:
                     for ws in weightscales:
                         for roff in rseed_offsets:                   
                             savefile = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%d/data/res%d.npz" %(expt, i) 
-                            fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 200000 -savefile %s -boost_factor %g -hidden_width_multiplier %g\n" % (rseed, roff, ws, n, beta, optimizer, savefile, boost_factor, hidden_width_multiplier))
+                            fo.write("-rseed %d -rseed_offset %d -weightscale %g -complexsize %d -beta %g -optimizer %g -epochs 500000 -savefile %s -boost_factor %g -hidden_width_multiplier %g\n" % (rseed, roff, ws, n, beta, optimizer, savefile, boost_factor, hidden_width_multiplier))
                             i = i+1
                             #what is lr?
                             #epoch thing may need to be cut
