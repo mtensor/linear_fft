@@ -50,7 +50,7 @@ for res_num in glob.glob(directory_path + '*.npz'):
         
     if run_params.complexsize == complex_size:
         key_cutoff_list.append(variables['key_cutoff'])
-        weightscale_list.append(run_params.weighscale)
+        weightscale_list.append(run_params.weightscale)
             #scaling_factors_list.append(variables['scaling_factors'])
     
             #fun_loss_list.append(variables['fnlossvec'][-1])
