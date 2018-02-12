@@ -66,14 +66,28 @@ order = np.argsort(weightscale_list)
 weightscale_list = np.array(weightscale_list)[order]
 key_cutoff_list = np.array(key_cutoff_list)[order]
 
+SMALL_SIZE = 8
+MEDIUM_SIZE = 12
+BIGGER_SIZE = 16
+
+plt.rc('font', size=MEDIUM_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=BIGGER_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=BIGGER_SIZE)    # fontsize of the x and y labels
+#plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+#plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+#plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+
+
 fig = plt.figure()
 fig, ax = plt.subplots()
 print "weightscale_list", weightscale_list
 print "key key_cutoff list", key_cutoff_list
-plt.plot(weightscale_list,key_cutoff_list,linewidth=4.0)
-ax.set(title='FFT convergence',
-       xlabel='Weight initialization noise scale',
-       ylabel='key cutoff value')
+plt.plot(weightscale_list,key_cutoff_list, marker='o',markersize=10, linewidth=4.0)
+ax.set(title='Convergence',
+       xlabel='Initialization noise scale',
+       ylabel='Key cutoff value')
 
 #fig.savefig(plotpath + "paritysize%d.png" % size, dpi=200)
 fig.savefig('FFTexpt%dsize%d.png' %(experiment_num, complex_size), dpi = 200)
