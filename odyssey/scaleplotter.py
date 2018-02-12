@@ -77,8 +77,11 @@ assert len(size_list_out) == len(size_list_in)
 
 true_scales = []
 for size in complex_sizes:
+    logn = int(np.ceil(np.log2(size)))
+    nlogn = float(size * logn)
     W = hand_code_fun_layer_less(size,0)
-    true_scales.append(l0norm(W))
+
+    true_scales.append(l0norm(W)/nlogn)
 
 
 #sort array
