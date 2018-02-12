@@ -92,15 +92,29 @@ print "in", scaling_factor_list_in
 print "out", scaling_factor_list_out
 
 print "sizelist", size_list_in
+
+SMALL_SIZE = 8
+MEDIUM_SIZE = 12
+BIGGER_SIZE = 16
+
+plt.rc('font', size=MEDIUM_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=BIGGER_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=BIGGER_SIZE)    # fontsize of the x and y labels
+#plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+#plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+#plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+plt.rc('text', usetex=True)
+
 #sample for the plotting
 fig = plt.figure()
 fig, ax = plt.subplots()
-ax.plot(size_list_in, scaling_factor_list_in,label='in')
-ax.plot(size_list_out, scaling_factor_list_out, label='out')
-ax.plot(size_list_in, true_scales, label='true scale')
+ax.plot(size_list_in, scaling_factor_list_in,label='Initialized within basin')
+ax.plot(size_list_out, scaling_factor_list_out, label='Intialized outside basin')
+ax.plot(size_list_in, true_scales, label='Hand-coded FFT')
 
-ax.set(title='FFT scaling',
-       xlabel='network size',
-       ylabel='complexity scale factor')
+ax.set(title='Scaling',
+       xlabel='Input size',
+       ylabel='Scale factor: $L_0 / (n \log n)')
 ax.legend(loc='best') 
 fig.savefig('FFTscaleexpt%d.png' %(experiment_num), dpi = 200)
