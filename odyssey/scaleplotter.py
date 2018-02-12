@@ -75,7 +75,10 @@ print "in", size_list_in
 print "out", size_list_out
 assert len(size_list_out) == len(size_list_in)
 
-true_scales = np.ones(len(size_list_in)) * 
+true_scales = []
+for size in complex_sizes:
+    W = hand_code_fun_layer_less(size,0)
+    true_scales.append(l0norm(W))
 
 
 #sort array
@@ -114,7 +117,7 @@ fig = plt.figure()
 fig, ax = plt.subplots()
 ax.loglog(size_list_in, scaling_factor_list_in, basex=2, marker='o',markersize=10, linewidth=4.0,label='Initialized within basin')
 ax.loglog(size_list_out, scaling_factor_list_out, basex=2, marker='o',markersize=10, linewidth=4.0, label='Intialized outside basin')
-ax.loglog(size_list_in, true_scales,basex=2, marker='o',markersize=10, linewidth=4.0, label='Hand-coded FFT')
+ax.loglog(size_list_in, true_scales, basex=2, marker='o',markersize=10, linewidth=4.0, label='Hand-coded FFT')
 
 ax.set(title='Scaling',
        xlabel='Input size',
