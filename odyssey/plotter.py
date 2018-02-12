@@ -65,7 +65,7 @@ for res_num in glob.glob(directory_path + '*.npz'):
 #sort array
 order = np.argsort(weightscale_list)
 weightscale_list = np.array(weightscale_list)[order]
-key_cutoff_list = np.array(key_cutoff_list)[order]
+normlist = np.array(normlist)[order]
 
 SMALL_SIZE = 8
 MEDIUM_SIZE = 12
