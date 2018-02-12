@@ -44,6 +44,7 @@ directory_path = "/n/home09/mnye/linear_fft/odyssey/results/fouriernetwork/expt%
 
 key_cutoff_list = []
 weightscale_list = []
+normlist = []
 
 for res_num in glob.glob(directory_path + '*.npz'):
     #try:
@@ -51,7 +52,7 @@ for res_num in glob.glob(directory_path + '*.npz'):
     run_params = variables['params'][0]    
         
     if run_params.complexsize == complex_size:
-        key_cutoff_list.append(variables['key_cutoff'])
+        normlist.append(variables['l0_norms'][-1])
         weightscale_list.append(run_params.weightscale)
             #scaling_factors_list.append(variables['scaling_factors'])
     
@@ -87,7 +88,7 @@ print "key key_cutoff list", key_cutoff_list
 plt.plot(weightscale_list,key_cutoff_list, marker='o',markersize=10, linewidth=4.0)
 ax.set(title='Convergence',
        xlabel='Initialization noise scale',
-       ylabel='Key cutoff value')
+       ylabel='L_0 norm')
 
 #fig.savefig(plotpath + "paritysize%d.png" % size, dpi=200)
-fig.savefig('FFTexpt%dsize%d.png' %(experiment_num, complex_size), dpi = 200)
+fig.savefig('FFTexpt%dsize%dl0.png' %(experiment_num, complex_size), dpi = 200)
