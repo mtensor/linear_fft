@@ -84,8 +84,8 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 fig = plt.figure()
 fig, ax = plt.subplots()
 print "weightscale_list", weightscale_list
-print "key key_cutoff list", key_cutoff_list
-plt.plot(weightscale_list,key_cutoff_list, marker='o',markersize=10, linewidth=4.0)
+print "normlist", normlist
+plt.plot(weightscale_list,normlist, marker='o',markersize=10, linewidth=4.0)
 ax.set(title='Convergence',
        xlabel='Initialization noise scale',
        ylabel='L_0 norm')
