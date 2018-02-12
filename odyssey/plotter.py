@@ -91,7 +91,7 @@ fig, ax = plt.subplots()
 print "weightscale_list", weightscale_list
 print "normlist", normlist
 ax.plot(weightscale_list,normlist, marker='o',markersize=10, linewidth=4.0, label='Network after training and optimal sparsification')
-ax.plot(weigthscale_list,l0optlist, '--',label='Hand-coded FFT')
+ax.plot(weightscale_list,l0optlist, '--',label='Hand-coded FFT')
 ax.set(title='Convergence',
        xlabel='Initialization noise scale',
        ylabel='L_0 norm')
