@@ -61,6 +61,11 @@ for res_num in glob.glob(directory_path + '*.npz'):
 #    print("there exists a trial which is not complete")
         #Whatever man    
  
+Wopt = hand_code_fun_layer_less(complex_size,0)
+l0opt = l0norm(Wopt)
+l0optlist = np.ones(len(weightscale_list)) * l0opt 
+
+
 
 #sort array
 order = np.argsort(weightscale_list)
@@ -85,10 +90,12 @@ fig = plt.figure()
 fig, ax = plt.subplots()
 print "weightscale_list", weightscale_list
 print "normlist", normlist
-plt.plot(weightscale_list,normlist, marker='o',markersize=10, linewidth=4.0)
+ax.plot(weightscale_list,normlist, marker='o',markersize=10, linewidth=4.0, label='Network after training and optimal sparsification')
+ax.plot(weigthscale_list,l0optlist, '--',label='Hand-coded FFT')
 ax.set(title='Convergence',
        xlabel='Initialization noise scale',
        ylabel='L_0 norm')
+ax.legend(loc='best')
 
 #fig.savefig(plotpath + "paritysize%d.png" % size, dpi=200)
 fig.savefig('FFTexpt%dsize%dl0.png' %(experiment_num, complex_size), dpi = 200)
